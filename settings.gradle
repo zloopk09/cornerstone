@@ -1,1 +1,1 @@
-include ':app', ':lib_base', ':lib_widget', ':lib_utils'
+include ':app', ':lib_base', ':lib_widget', ':lib_utils', ':biz_user', ':biz_search', ':biz_home', ':biz_message'
