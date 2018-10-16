@@ -37,6 +37,14 @@ allprojects {
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
 
+//        maven {
+//            credentials {
+//                username 'zloop'
+//                password 'zloop'
+//            }
+//            url "http://nexus.zloop.com/repository/release/"
+//        }
+
         jcenter()
         google()
     }
