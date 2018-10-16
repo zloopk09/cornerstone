@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
 
@@ -32,28 +33,28 @@ android {
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
 
-        pre {
-            initWith release
-            debuggable true
-            versionNameSuffix "-pre"
-        }
+//        pre {
+//            initWith release
+//            debuggable true
+//            versionNameSuffix "-pre"
+//        }
     }
 
-    flavorDimensions "default"
-
-    // If you need to add more flavors, consider using flavor dimensions.
-    productFlavors {
-        lite {
-            dimension "default"
-            applicationIdSuffix ".lite"
-            buildConfigField 'boolean', 'PAID', 'false'
-        }
-        pro {
-            dimension "default"
-            applicationIdSuffix ".pro"
-            buildConfigField 'boolean', 'PAID', 'true'
-        }
-    }
+//    flavorDimensions "default"
+//
+//    // If you need to add more flavors, consider using flavor dimensions.
+//    productFlavors {
+//        lite {
+//            dimension "default"
+//            applicationIdSuffix ".lite"
+//            buildConfigField 'boolean', 'PAID', 'false'
+//        }
+//        pro {
+//            dimension "default"
+//            applicationIdSuffix ".pro"
+//            buildConfigField 'boolean', 'PAID', 'true'
+//        }
+//    }
 }
 
 dependencies {
@@ -67,8 +68,15 @@ dependencies {
     implementation "com.android.support:design:$rootProject.supportLibraryVersion"
     implementation "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
 
+    implementation project(path: ':biz_home')
+    implementation project(path: ':biz_message')
+    implementation project(path: ':biz_search')
+    implementation project(path: ':biz_user')
+
     implementation "com.android.support.constraint:constraint-layout:$rootProject.constraintLayoutVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:design:28.0.0-alpha1'
+    implementation 'com.android.support:support-vector-drawable:28.0.0-alpha1'
     testImplementation "junit:junit:$rootProject.junitVersion"
     androidTestImplementation "com.android.support.test:runner:$rootProject.runnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
