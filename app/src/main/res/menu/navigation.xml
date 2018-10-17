@@ -7,18 +7,18 @@
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_discover_black_24dp"
+        android:id="@+id/navigation_explore"
+        android:icon="@drawable/ic_explore_black_24dp"
         android:title="@string/title_discover" />
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_message"
         android:icon="@drawable/ic_message_black_24dp"
         android:title="@string/title_message" />
 
     <item
         android:id="@+id/navigation_user"
-        android:icon="@drawable/ic_user_circle_black_24dp"
+        android:icon="@drawable/ic_person_black_24dp"
         android:title="@string/title_user" />
 
 </menu>
