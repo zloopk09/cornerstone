@@ -68,10 +68,10 @@ dependencies {
     implementation "com.android.support:design:$rootProject.supportLibraryVersion"
     implementation "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
 
-    implementation project(path: ':biz_home')
-    implementation project(path: ':biz_message')
-    implementation project(path: ':biz_search')
-    implementation project(path: ':biz_user')
+    implementation project(':biz_home')
+    implementation project(':biz_message')
+    implementation project(':biz_search')
+    implementation project(':biz_user')
 
     implementation "com.android.support.constraint:constraint-layout:$rootProject.constraintLayoutVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
