@@ -5,6 +5,10 @@
     <application>
         <activity android:name=".websocket.WebsocketActivity">
         </activity>
+        <activity android:name=".bottomtabs.BottomTabsActivity">
+        </activity>
+        <activity android:name=".socket.SocketActivity">
+        </activity>
     </application>
 
 </manifest>
