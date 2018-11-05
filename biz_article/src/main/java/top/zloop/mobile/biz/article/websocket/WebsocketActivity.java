@@ -36,6 +36,8 @@ public class WebsocketActivity extends AppCompatActivity {
 
     private List<String> mMessages;
 
+    private String username="test-robot";
+
     public static final String EVENT_ADD_USER = "add user";
     public static final String EVENT_NEW_MESSAGE = "new message";
     public static final String EVENT_USER_JOINED = "user joined";
@@ -72,7 +74,7 @@ public class WebsocketActivity extends AppCompatActivity {
                 SocketIOClient.getInstance().setOnConnectListener(new OnConnectListener() {
                     @Override
                     public void onConnect() {
-                        mSocket.emit(EVENT_ADD_USER, "test-robot");
+                        mSocket.emit(EVENT_ADD_USER, username);
                     }
 
                     @Override
@@ -92,16 +94,16 @@ public class WebsocketActivity extends AppCompatActivity {
                 }).connect();
 
                 mSocket=SocketIOClient.getInstance().getSocket();
-                SocketIOClient.getInstance().getSocket().on(EVENT_NEW_MESSAGE, onNewMessage);
-                SocketIOClient.getInstance().getSocket().on(EVENT_USER_JOINED, onUserJoined);
-                SocketIOClient.getInstance().getSocket().on(EVENT_USER_LEFT, onUserLeft);
+                mSocket.on(EVENT_NEW_MESSAGE, onNewMessage);
+                mSocket.on(EVENT_USER_JOINED, onUserJoined);
+                mSocket.on(EVENT_USER_LEFT, onUserLeft);
             }
         });
 
         disconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SocketIOClient.getInstance().destory();
+                SocketIOClient.getInstance().disconnect();
             }
         });
 
@@ -115,7 +117,7 @@ public class WebsocketActivity extends AppCompatActivity {
                     return;
                 }
                 mInputMessageView.setText("");
-//                addMessage(mUsername, message);
+                addMessage(username, message);
                 mSocket.emit(EVENT_NEW_MESSAGE, message);
             }
         });

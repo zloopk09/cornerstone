@@ -31,6 +31,32 @@ public class SocketIOClient {
     private OnConnectListener mListener;
 
     private SocketIOClient() {
+        if(mSocket==null){
+            try {
+                IO.Options opts = new IO.Options();
+//                opts.path = "/notify";
+//                opts.query = "scanId=a3f453c91f4bb12ddfd963a277670c33";
+                opts.transports = new String[]{"websocket"};
+                opts.timeout = 10 * 1000;
+//                opts.reconnection = true;
+//                opts.reconnectionAttempts = 5;
+//                opts.reconnectionDelayMax = 1000; //重连等待时间
+//                opts.secure = true;
+//                opts.forceNew = true;
+                opts.hostnameVerifier = new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return true;
+                    }
+                };
+
+//                mSocket = IO.socket(SOCKET_URL);
+                mSocket = IO.socket(SOCKET_URL, opts);
+
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static SocketIOClient getInstance() {
@@ -47,39 +73,11 @@ public class SocketIOClient {
 
 
     public SocketIOClient connect() {
-        if(mSocket!=null){
-            mSocket.disconnect();
-        }
-        try {
-            IO.Options opts = new IO.Options();
-//            opts.path = "/notify";
-//            opts.query = "scanId=a3f453c91f4bb12ddfd963a277670c33";
-            opts.transports = new String[]{"websocket"};
-            opts.timeout = 10 * 1000;
-//            opts.reconnection = true;
-//            opts.reconnectionAttempts = 5;
-//            opts.reconnectionDelayMax = 1000; //重连等待时间
-//            opts.secure = true;
-//            opts.forceNew = true;
-//            opts.hostnameVerifier = new HostnameVerifier() {
-//                @Override
-//                public boolean verify(String hostname, SSLSession session) {
-//                    return true;
-//                }
-//            };
-
-            mSocket = IO.socket(SOCKET_URL, opts);
-
-            mSocket.on(Socket.EVENT_CONNECT,onConnect);
-            mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
-            mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
-            mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
-
-            mSocket.connect();
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        mSocket.on(Socket.EVENT_CONNECT,onConnect);
+        mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
+        mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
+        mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+        mSocket.connect();
         return this;
     }
 
@@ -89,7 +87,7 @@ public class SocketIOClient {
     }
 
 
-    public void destory() {
+    public void disconnect() {
         mSocket.disconnect();
         mSocket.off();
     }
@@ -115,7 +113,7 @@ public class SocketIOClient {
     private Emitter.Listener onConnectTimeout = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.e(TAG, "connecting error");
+            Log.e(TAG, "connecting timeout");
             if (mListener != null) mListener.onConnectTimeout();
         }
     };
