@@ -52,8 +52,8 @@ public class SocketIOClient {
         }
         try {
             IO.Options opts = new IO.Options();
-            opts.path = "/notify";
-            opts.query = "scanId=a3f453c91f4bb12ddfd963a277670c33";
+//            opts.path = "/notify";
+//            opts.query = "scanId=a3f453c91f4bb12ddfd963a277670c33";
             opts.transports = new String[]{"websocket"};
             opts.timeout = 10 * 1000;
 //            opts.reconnection = true;
@@ -61,12 +61,12 @@ public class SocketIOClient {
 //            opts.reconnectionDelayMax = 1000; //重连等待时间
 //            opts.secure = true;
 //            opts.forceNew = true;
-            opts.hostnameVerifier = new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
+//            opts.hostnameVerifier = new HostnameVerifier() {
+//                @Override
+//                public boolean verify(String hostname, SSLSession session) {
+//                    return true;
+//                }
+//            };
 
             mSocket = IO.socket(SOCKET_URL, opts);
 

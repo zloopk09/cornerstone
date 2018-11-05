@@ -45,7 +45,7 @@ public class WebsocketActivity extends AppCompatActivity {
 //    public static final String EVENT_JOIN_ROOM = "join_room";
 //    public static final String EVENT_NOTIFY = "notify";
 
-    private Socket mSocket=SocketIOClient.getInstance().getSocket();
+    private Socket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +91,10 @@ public class WebsocketActivity extends AppCompatActivity {
                     }
                 }).connect();
 
-                mSocket.on(EVENT_NEW_MESSAGE, onNewMessage);
-                mSocket.on(EVENT_USER_JOINED, onUserJoined);
-                mSocket.on(EVENT_USER_LEFT, onUserLeft);
+                mSocket=SocketIOClient.getInstance().getSocket();
+                SocketIOClient.getInstance().getSocket().on(EVENT_NEW_MESSAGE, onNewMessage);
+                SocketIOClient.getInstance().getSocket().on(EVENT_USER_JOINED, onUserJoined);
+                SocketIOClient.getInstance().getSocket().on(EVENT_USER_LEFT, onUserLeft);
             }
         });
 
