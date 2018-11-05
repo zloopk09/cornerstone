@@ -12,6 +12,9 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+
 public class SocketIOClient {
 
     private static final String TAG = "SocketIOClient";
@@ -20,6 +23,9 @@ public class SocketIOClient {
 
     public static final String SOCKET_URL = "wss://api.huobi.pro/ws";
     private Socket mSocket;
+
+    public static final String EVENT_JOIN_ROOM = "join_room";
+    public static final String EVENT_NOTIFY = "notify";
 
     private SocketIOClient() {
     }
@@ -39,12 +45,19 @@ public class SocketIOClient {
         try {
             IO.Options opts = new IO.Options();
             opts.path = "/notify";
+            opts.query = "scanId=a3f453c91f4bb12ddfd963a277670c33";
             opts.transports = new String[]{"websocket"};
-
-            opts.reconnection = true;// 是否自动重新连接
-            opts.reconnectionAttempts = 10; //重新连接尝试次数
-//            opts.reconnectionDelayMax = 1000; //重新连接之间最长等待时间
-//            opts.timeout = 20000; //connect_error和connect_timeout事件发出之前的等待时间
+            opts.timeout = 10 * 1000;
+//            opts.reconnection = true;
+//            opts.reconnectionAttempts = 5;
+//            opts.reconnectionDelayMax = 1000; //重连等待时间
+            opts.forceNew = true;
+            opts.hostnameVerifier = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
 
             mSocket = IO.socket(SOCKET_URL, opts);
 
@@ -52,8 +65,8 @@ public class SocketIOClient {
             mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
             mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
             mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
-            mSocket.on("join_room", onJoinRoom);
-            mSocket.on("notify", onNotify);
+            mSocket.on(EVENT_JOIN_ROOM, onJoinRoom);
+            mSocket.on(EVENT_NOTIFY, onNotify);
             mSocket.connect();
 
         } catch (URISyntaxException e) {
@@ -68,21 +81,23 @@ public class SocketIOClient {
         mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect);
         mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
         mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
-        mSocket.off("join_room", onJoinRoom);
-        mSocket.off("notify", onNotify);
+        mSocket.off(EVENT_JOIN_ROOM, onJoinRoom);
+        mSocket.off(EVENT_NOTIFY, onNotify);
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.i(TAG, "connected");
+            Log.d(TAG, "connected");
+            Log.d(TAG, "mSocket.id()?:"+mSocket.id());
+            Log.d(TAG, "mSocket.connected()?:"+mSocket.connected());
         }
     };
 
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.i(TAG, "diconnected");
+            Log.d(TAG, "diconnected");
         }
     };
 
@@ -97,7 +112,7 @@ public class SocketIOClient {
         @Override
         public void call(final Object... args) {
             JSONArray data = (JSONArray) args[0];
-            Log.e(TAG, data.toString());
+            Log.d(TAG, data.toString());
 
 
         }
@@ -107,7 +122,7 @@ public class SocketIOClient {
         @Override
         public void call(final Object... args) {
             JSONObject data = (JSONObject) args[0];
-            Log.e(TAG, data.toString());
+            Log.d(TAG, data.toString());
 
 
         }
