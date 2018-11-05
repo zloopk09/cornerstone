@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import top.zloop.mobile.biz.article.ArticlesFragment;
 import top.zloop.mobile.biz.home.HomeFragment;
 import top.zloop.mobile.biz.message.MessageFragment;
 import top.zloop.mobile.biz.search.SearchFragment;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = HomeFragment.newInstance();
                     break;
                 case R.id.navigation_explore:
-                    selectedFragment = SearchFragment.newInstance();
+                    selectedFragment = ArticlesFragment.newInstance();
                     break;
                 case R.id.navigation_message:
                     selectedFragment = MessageFragment.newInstance();
