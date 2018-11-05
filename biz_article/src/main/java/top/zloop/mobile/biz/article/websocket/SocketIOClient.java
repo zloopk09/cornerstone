@@ -27,6 +27,8 @@ public class SocketIOClient {
     public static final String EVENT_JOIN_ROOM = "join_room";
     public static final String EVENT_NOTIFY = "notify";
 
+    private OnConnectListener mListener;
+
     private SocketIOClient() {
     }
 
@@ -41,7 +43,10 @@ public class SocketIOClient {
         return mSocket;
     }
 
-    public void onConnect() {
+    public SocketIOClient connect() {
+        if(mSocket!=null){
+            mSocket.disconnect();
+        }
         try {
             IO.Options opts = new IO.Options();
             opts.path = "/notify";
@@ -51,7 +56,8 @@ public class SocketIOClient {
 //            opts.reconnection = true;
 //            opts.reconnectionAttempts = 5;
 //            opts.reconnectionDelayMax = 1000; //重连等待时间
-            opts.forceNew = true;
+//            opts.secure = true;
+//            opts.forceNew = true;
             opts.hostnameVerifier = new HostnameVerifier() {
                 @Override
                 public boolean verify(String hostname, SSLSession session) {
@@ -63,7 +69,7 @@ public class SocketIOClient {
 
             mSocket.on(Socket.EVENT_CONNECT,onConnect);
             mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
-            mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
+            mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
             mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
             mSocket.on(EVENT_JOIN_ROOM, onJoinRoom);
             mSocket.on(EVENT_NOTIFY, onNotify);
@@ -72,14 +78,21 @@ public class SocketIOClient {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        return this;
     }
 
-    public void onDestory() {
+    public SocketIOClient setOnConnectListener(OnConnectListener listener) {
+        mListener = listener;
+        return this;
+    }
+
+
+    public void destory() {
         mSocket.disconnect();
 
         mSocket.off(Socket.EVENT_CONNECT, onConnect);
         mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect);
-        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
+        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
         mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.off(EVENT_JOIN_ROOM, onJoinRoom);
         mSocket.off(EVENT_NOTIFY, onNotify);
@@ -91,6 +104,7 @@ public class SocketIOClient {
             Log.d(TAG, "connected");
             Log.d(TAG, "mSocket.id()?:"+mSocket.id());
             Log.d(TAG, "mSocket.connected()?:"+mSocket.connected());
+            if (mListener != null) mListener.onConnect();
         }
     };
 
@@ -98,6 +112,15 @@ public class SocketIOClient {
         @Override
         public void call(Object... args) {
             Log.d(TAG, "diconnected");
+            if (mListener != null) mListener.onDisconnect();
+        }
+    };
+
+    private Emitter.Listener onConnectTimeout = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.e(TAG, "connecting error");
+            if (mListener != null) mListener.onConnectTimeout();
         }
     };
 
@@ -105,6 +128,7 @@ public class SocketIOClient {
         @Override
         public void call(Object... args) {
             Log.e(TAG, "connecting error");
+            if (mListener != null) mListener.onConnectError();
         }
     };
 

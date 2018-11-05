@@ -29,7 +29,27 @@ public class WebsocketActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_websocket);
 
-        mSocket.connect();
+        SocketIOClient.getInstance().setOnConnectListener(new OnConnectListener() {
+            @Override
+            public void onConnect() {
+
+            }
+
+            @Override
+            public void onDisconnect() {
+
+            }
+
+            @Override
+            public void onConnectTimeout() {
+
+            }
+
+            @Override
+            public void onConnectError() {
+
+            }
+        }).connect();
 
     }
 
