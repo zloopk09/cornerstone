@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
@@ -21,11 +23,10 @@ public class SocketIOClient {
 
     private static SocketIOClient instance;
 
-    public static final String SOCKET_URL = "wss://api.huobi.pro/ws";
-    private Socket mSocket;
+//    public static final String SOCKET_URL = "http://10.1.29.229:9003/";
+    public static final String SOCKET_URL = "https://socket-io-chat.now.sh/";
 
-    public static final String EVENT_JOIN_ROOM = "join_room";
-    public static final String EVENT_NOTIFY = "notify";
+    private Socket mSocket;
 
     private OnConnectListener mListener;
 
@@ -39,9 +40,11 @@ public class SocketIOClient {
         return instance;
     }
 
-    public Socket getmSocket(){
+    public Socket getSocket(){
         return mSocket;
     }
+
+
 
     public SocketIOClient connect() {
         if(mSocket!=null){
@@ -71,8 +74,7 @@ public class SocketIOClient {
             mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
             mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
             mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
-            mSocket.on(EVENT_JOIN_ROOM, onJoinRoom);
-            mSocket.on(EVENT_NOTIFY, onNotify);
+
             mSocket.connect();
 
         } catch (URISyntaxException e) {
@@ -89,13 +91,7 @@ public class SocketIOClient {
 
     public void destory() {
         mSocket.disconnect();
-
-        mSocket.off(Socket.EVENT_CONNECT, onConnect);
-        mSocket.off(Socket.EVENT_DISCONNECT, onDisconnect);
-        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
-        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
-        mSocket.off(EVENT_JOIN_ROOM, onJoinRoom);
-        mSocket.off(EVENT_NOTIFY, onNotify);
+        mSocket.off();
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
@@ -132,25 +128,7 @@ public class SocketIOClient {
         }
     };
 
-    private Emitter.Listener onJoinRoom = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            JSONArray data = (JSONArray) args[0];
-            Log.d(TAG, data.toString());
 
-
-        }
-    };
-
-    private Emitter.Listener onNotify = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            JSONObject data = (JSONObject) args[0];
-            Log.d(TAG, data.toString());
-
-
-        }
-    };
 
 
 }
