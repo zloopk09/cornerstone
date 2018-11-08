@@ -164,12 +164,13 @@ public class SocketIO2Activity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        SocketIOClient.getInstance().unregisterMessageLisenner();
+        SocketIOClient.getInstance().unregisterRoomLisenner();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        SocketIOClient.getInstance().disconnect();
     }
 
 }
