@@ -146,6 +146,9 @@ public class SocketIOActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        SocketIOClient.getInstance().unregisterConnectLisenner();
+        SocketIOClient.getInstance().unregisterMessageLisenner();
+        SocketIOClient.getInstance().unregisterRoomLisenner();
     }
 
     @Override
