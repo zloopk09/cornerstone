@@ -34,8 +34,6 @@ public class SocketIOActivity extends AppCompatActivity {
     public static final String EVENT_ADD_USER = "add user";
     private String username="test-robot";
 
-    private Socket mSocket;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +66,7 @@ public class SocketIOActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSocket.connected()) return;
+                if (! SocketIOClient.getInstance().isConnected()) return;
                 String message = mInputMessageView.getText().toString().trim();
                 if (TextUtils.isEmpty(message)) {
                     mInputMessageView.requestFocus();
@@ -76,7 +74,7 @@ public class SocketIOActivity extends AppCompatActivity {
                 }
                 mInputMessageView.setText("");
                 addMessage(username, message);
-                mSocket.emit(SocketIOClient.EVENT_NEW_MESSAGE, message);
+                SocketIOClient.getInstance().sendMessage(message);
             }
         });
 
@@ -88,7 +86,7 @@ public class SocketIOActivity extends AppCompatActivity {
         SocketIOClient.getInstance().registerConnectLisenner(new OnSocketIOConnectListener() {
             @Override
             public void onConnect() {
-                mSocket.emit(EVENT_ADD_USER, username);
+                SocketIOClient.getInstance().getSocket().emit(EVENT_ADD_USER, username);
             }
 
             @Override
@@ -137,7 +135,6 @@ public class SocketIOActivity extends AppCompatActivity {
             }
         }).connect();
 
-        mSocket=SocketIOClient.getInstance().getSocket();
     }
 
     private void addMessage(String username, String message) {

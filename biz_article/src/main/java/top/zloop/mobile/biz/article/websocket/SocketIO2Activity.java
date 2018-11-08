@@ -32,8 +32,6 @@ public class SocketIO2Activity extends AppCompatActivity {
 
     private List<String> mMessages;
 
-    private Socket mSocket;
-
     private String username;
 
     @Override
@@ -93,7 +91,6 @@ public class SocketIO2Activity extends AppCompatActivity {
                     }
                 }).connect();
 
-                mSocket=SocketIOClient.getInstance().getSocket();
             }
         });
 
@@ -108,7 +105,7 @@ public class SocketIO2Activity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mSocket.connected()) return;
+                if (!SocketIOClient.getInstance().isConnected()) return;
                 String message = mInputMessageView.getText().toString().trim();
                 if (TextUtils.isEmpty(message)) {
                     mInputMessageView.requestFocus();
@@ -116,7 +113,7 @@ public class SocketIO2Activity extends AppCompatActivity {
                 }
                 mInputMessageView.setText("");
                 addMessage(username, message);
-                mSocket.emit(SocketIOClient.EVENT_NEW_MESSAGE, message);
+                SocketIOClient.getInstance().sendMessage(message);
             }
         });
 
@@ -125,6 +122,37 @@ public class SocketIO2Activity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        SocketIOClient.getInstance().registerMessageLisenner(new OnSocketIOMessageEventListener() {
+            @Override
+            public void onNewMessage(final Message message) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addMessage(message.getTitle(),message.getContent());
+                    }
+                });
+            }
+        }).registerRoomLisenner(new OnSocketIORoomEventListener() {
+            @Override
+            public void onUserJoined(final Message message) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addMessage(message.getTitle(),message.getContent());
+                    }
+                });
+            }
+
+            @Override
+            public void onUserLeft(final Message message) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addMessage(message.getTitle(),message.getContent());
+                    }
+                });
+            }
+        }).connect();
     }
 
     private void addMessage(String username, String message) {
