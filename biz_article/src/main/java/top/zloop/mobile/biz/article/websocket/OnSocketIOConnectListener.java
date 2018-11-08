@@ -1,6 +1,6 @@
 package top.zloop.mobile.biz.article.websocket;
 
-public interface OnConnectListener {
+public interface OnSocketIOConnectListener {
 
 
     void onConnect();
@@ -10,4 +10,5 @@ public interface OnConnectListener {
     void onConnectTimeout();
 
     void onConnectError();
+
 }

@@ -1,21 +1,21 @@
 package top.zloop.mobile.biz.article.websocket;
 
+import android.app.Application;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
+
+import top.zloop.mobile.biz.article.websocket.data.Message;
 
 public class SocketIOClient {
 
@@ -23,12 +23,17 @@ public class SocketIOClient {
 
     private static SocketIOClient instance;
 
-//    public static final String SOCKET_URL = "http://10.1.29.229:9003/";
     public static final String SOCKET_URL = "https://socket-io-chat.now.sh/";
+
+    public static final String EVENT_NEW_MESSAGE = "new message";
+    public static final String EVENT_USER_JOINED = "user joined";
+    public static final String EVENT_USER_LEFT = "user left";
 
     private Socket mSocket;
 
-    private OnConnectListener mListener;
+    private OnSocketIOConnectListener mOnSocketIOConnectListener;
+    private OnSocketIOMessageEventListener mOnSocketIOMessageEventListener;
+    private OnSocketIORoomEventListener mOnSocketIORoomEventListener;
 
     private SocketIOClient() {
         if(mSocket==null){
@@ -49,7 +54,6 @@ public class SocketIOClient {
                         return true;
                     }
                 };
-
 //                mSocket = IO.socket(SOCKET_URL);
                 mSocket = IO.socket(SOCKET_URL, opts);
 
@@ -70,26 +74,62 @@ public class SocketIOClient {
         return mSocket;
     }
 
-
-
     public SocketIOClient connect() {
-        mSocket.on(Socket.EVENT_CONNECT,onConnect);
-        mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
-        mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
-        mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.connect();
         return this;
     }
 
-    public SocketIOClient setOnConnectListener(OnConnectListener listener) {
-        mListener = listener;
-        return this;
+    public boolean isConnected(){
+        if(mSocket==null){
+            return false;
+        }
+        return mSocket.connected();
     }
-
 
     public void disconnect() {
         mSocket.disconnect();
         mSocket.off();
+    }
+
+    public SocketIOClient registerConnectLisenner(OnSocketIOConnectListener listener){
+        mOnSocketIOConnectListener = listener;
+        mSocket.on(Socket.EVENT_CONNECT,onConnect);
+        mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
+        mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
+        mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+        return this;
+    }
+
+    public void unregisterConnectLisenner(){
+        if (mOnSocketIOConnectListener != null) return;
+        mSocket.off(Socket.EVENT_CONNECT,onConnect);
+        mSocket.off(Socket.EVENT_DISCONNECT,onDisconnect);
+        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
+        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+    }
+
+    public SocketIOClient registerMessageLisenner(OnSocketIOMessageEventListener listener){
+        mOnSocketIOMessageEventListener = listener;
+        mSocket.on(EVENT_NEW_MESSAGE,onNewMessage);
+        return this;
+    }
+
+    public void unregisterMessageLisenner(){
+        if (mOnSocketIOMessageEventListener != null) return;
+        mSocket.off(EVENT_NEW_MESSAGE,onNewMessage);
+    }
+
+    public SocketIOClient registerRoomLisenner(OnSocketIORoomEventListener listener){
+        mOnSocketIORoomEventListener = listener;
+        mSocket.on(EVENT_USER_JOINED,onUserJoined);
+        mSocket.on(EVENT_USER_LEFT,onUserLeft);
+        return this;
+    }
+
+    public void unregisterRoomLisenner(){
+        if (mOnSocketIORoomEventListener != null) return;
+        mSocket.off(EVENT_USER_JOINED,onUserJoined);
+        mSocket.off(EVENT_USER_LEFT,onUserLeft);
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
@@ -98,7 +138,7 @@ public class SocketIOClient {
             Log.d(TAG, "connected");
             Log.d(TAG, "mSocket.id()?:"+mSocket.id());
             Log.d(TAG, "mSocket.connected()?:"+mSocket.connected());
-            if (mListener != null) mListener.onConnect();
+            if (mOnSocketIOConnectListener != null) mOnSocketIOConnectListener.onConnect();
         }
     };
 
@@ -106,7 +146,7 @@ public class SocketIOClient {
         @Override
         public void call(Object... args) {
             Log.d(TAG, "diconnected");
-            if (mListener != null) mListener.onDisconnect();
+            if (mOnSocketIOConnectListener != null) mOnSocketIOConnectListener.onDisconnect();
         }
     };
 
@@ -114,7 +154,7 @@ public class SocketIOClient {
         @Override
         public void call(Object... args) {
             Log.e(TAG, "connecting timeout");
-            if (mListener != null) mListener.onConnectTimeout();
+            if (mOnSocketIOConnectListener != null) mOnSocketIOConnectListener.onConnectTimeout();
         }
     };
 
@@ -122,11 +162,89 @@ public class SocketIOClient {
         @Override
         public void call(Object... args) {
             Log.e(TAG, "connecting error");
-            if (mListener != null) mListener.onConnectError();
+            if (mOnSocketIOConnectListener != null) mOnSocketIOConnectListener.onConnectError();
         }
     };
 
 
+    public void sendMessage(final Object... args){
+        if(mSocket==null){
+            return;
+        }
+        mSocket.emit(EVENT_NEW_MESSAGE,args);
+    }
 
+
+    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            JSONObject data = (JSONObject) args[0];
+
+            String title;
+            String content;
+            try {
+                title = data.getString("username");
+                content = data.getString("message");
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+                return;
+            }
+            Message message=new Message();
+            message.setTitle(title);
+            message.setContent(" says: "+content);
+            if (mOnSocketIOMessageEventListener != null) {
+                mOnSocketIOMessageEventListener.onNewMessage(message);
+            }
+        }
+    };
+
+    private Emitter.Listener onUserJoined = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            JSONObject data = (JSONObject) args[0];
+
+            String title;
+            String content;
+            try {
+                title = data.getString("username");
+                content = data.getString("numUsers");
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+                return;
+            }
+            Message message=new Message();
+            message.setTitle(title);
+            message.setContent(" joined, current users:"+content);
+            if (mOnSocketIORoomEventListener != null) {
+                mOnSocketIORoomEventListener.onUserJoined(message);
+            }
+
+        }
+    };
+
+    private Emitter.Listener onUserLeft = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+
+            JSONObject data = (JSONObject) args[0];
+
+            String title;
+            String content;
+            try {
+                title = data.getString("username");
+                content = data.getString("numUsers");
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+                return;
+            }
+            Message message=new Message();
+            message.setTitle(title);
+            message.setContent(" left, current users:"+content);
+            if (mOnSocketIORoomEventListener != null) {
+                mOnSocketIORoomEventListener.onUserLeft(message);
+            }
+
+        }
+    };
 
 }

@@ -3,11 +3,13 @@
           package="top.zloop.mobile.biz.article">
 
     <application>
-        <activity android:name=".websocket.WebsocketActivity">
+        <activity android:name=".websocket.SocketIOActivity">
         </activity>
         <activity android:name=".bottomtabs.BottomTabsActivity">
         </activity>
         <activity android:name=".socket.SocketActivity">
+        </activity>
+        <activity android:name=".websocket.SocketIO2Activity">
         </activity>
     </application>
 
