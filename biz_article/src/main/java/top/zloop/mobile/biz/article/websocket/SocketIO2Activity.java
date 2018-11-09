@@ -152,7 +152,7 @@ public class SocketIO2Activity extends AppCompatActivity {
                     }
                 });
             }
-        }).connect();
+        });
     }
 
     private void addMessage(String username, String message) {

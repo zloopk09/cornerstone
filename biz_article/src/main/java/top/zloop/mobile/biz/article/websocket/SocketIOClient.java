@@ -101,11 +101,12 @@ public class SocketIOClient {
     }
 
     public void unregisterConnectLisenner(){
-        if (mOnSocketIOConnectListener != null) return;
-        mSocket.off(Socket.EVENT_CONNECT,onConnect);
-        mSocket.off(Socket.EVENT_DISCONNECT,onDisconnect);
-        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
-        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+        if (mOnSocketIOConnectListener != null) {
+            mSocket.off(Socket.EVENT_CONNECT,onConnect);
+            mSocket.off(Socket.EVENT_DISCONNECT,onDisconnect);
+            mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
+            mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
+        }
     }
 
     public SocketIOClient registerMessageLisenner(OnSocketIOMessageEventListener listener){
@@ -115,8 +116,9 @@ public class SocketIOClient {
     }
 
     public void unregisterMessageLisenner(){
-        if (mOnSocketIOMessageEventListener != null) return;
-        mSocket.off(EVENT_NEW_MESSAGE,onNewMessage);
+        if (mOnSocketIOMessageEventListener != null) {
+            mSocket.off(EVENT_NEW_MESSAGE,onNewMessage);
+        }
     }
 
     public SocketIOClient registerRoomLisenner(OnSocketIORoomEventListener listener){
@@ -127,9 +129,10 @@ public class SocketIOClient {
     }
 
     public void unregisterRoomLisenner(){
-        if (mOnSocketIORoomEventListener != null) return;
-        mSocket.off(EVENT_USER_JOINED,onUserJoined);
-        mSocket.off(EVENT_USER_LEFT,onUserLeft);
+        if (mOnSocketIORoomEventListener != null) {
+            mSocket.off(EVENT_USER_JOINED,onUserJoined);
+            mSocket.off(EVENT_USER_LEFT,onUserLeft);
+        }
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
