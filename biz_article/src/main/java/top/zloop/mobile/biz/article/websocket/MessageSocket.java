@@ -12,7 +12,7 @@ import top.zloop.mobile.biz.article.websocket.data.Message;
 
 public class MessageSocket {
 
-    private static final String TAG = "websocket";
+    private static final String TAG = "websocket-MessageSocket";
 
     public static final String EVENT_NEW_MESSAGE = "new message";
 
@@ -104,7 +104,7 @@ public class MessageSocket {
 
 
     public void sendMessage(final Object... args){
-        if(mSocket==null){
+        if(mSocket==null||!mSocket.connected()){
             return;
         }
         mSocket.emit(EVENT_NEW_MESSAGE,args);

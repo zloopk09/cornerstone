@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class SocketIO2Activity extends AppCompatActivity {
     private String username;
 
     private MessageSocket mMessageSocket;
+//    private MessageSocket mMessageSocket2;
     private RoomSocket mRoomSocket;
 
     @Override
@@ -40,8 +42,9 @@ public class SocketIO2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_socket_io2);
 
-        mMessageSocket = new MessageSocket();
-        mRoomSocket = new RoomSocket();
+        mMessageSocket = BizSocketManager.getInstance().getMessageSocket();
+//        mMessageSocket2 = BizSocketManager.getInstance().getMessageSocket();
+        mRoomSocket = BizSocketManager.getInstance().getRoomSocket();
 
         Bundle bundle = this.getIntent().getExtras();
         username = bundle.getString("username");
@@ -102,7 +105,8 @@ public class SocketIO2Activity extends AppCompatActivity {
         disconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SocketIOClient.getInstance().disconnect();
+                mMessageSocket.disconnect();
+                mRoomSocket.disconnect();
             }
         });
 
@@ -110,7 +114,6 @@ public class SocketIO2Activity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!SocketIOClient.getInstance().isConnected()) return;
                 String message = mInputMessageView.getText().toString().trim();
                 if (TextUtils.isEmpty(message)) {
                     mInputMessageView.requestFocus();
@@ -159,6 +162,18 @@ public class SocketIO2Activity extends AppCompatActivity {
                 });
             }
         });
+
+//        mMessageSocket2.registerMessageLisenner(new OnSocketIOMessageEventListener() {
+//            @Override
+//            public void onNewMessage(final Message message) {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(SocketIO2Activity.this,message.getContent(),Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//            }
+//        });
     }
 
     private void addMessage(String username, String message) {
@@ -171,6 +186,7 @@ public class SocketIO2Activity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mMessageSocket.off();
+//        mMessageSocket2.off();
         mRoomSocket.off();
     }
 

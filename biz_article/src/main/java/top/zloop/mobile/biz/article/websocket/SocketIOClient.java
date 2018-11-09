@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 
 public class SocketIOClient {
 
-    private static final String TAG = "websocket";
+    private static final String TAG = "websocket-SocketIOClient";
 
     public static final String SOCKET_URL = "https://socket-io-chat.now.sh/";
 
@@ -49,23 +49,6 @@ public class SocketIOClient {
 
     public static Socket getSocket(){
         return mSocket;
-    }
-
-    public SocketIOClient connect() {
-        mSocket.connect();
-        return this;
-    }
-
-    public boolean isConnected(){
-        if(mSocket==null){
-            return false;
-        }
-        return mSocket.connected();
-    }
-
-    public void disconnect() {
-        mSocket.disconnect();
-        mSocket.off();
     }
 
 }

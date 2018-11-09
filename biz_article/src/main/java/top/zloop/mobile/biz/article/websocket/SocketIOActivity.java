@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,6 @@ public class SocketIOActivity extends AppCompatActivity {
 
     private List<String> mMessages;
 
-    public static final String EVENT_ADD_USER = "add user";
     private String username="test-robot";
     private MessageSocket mSocket;
 
@@ -65,7 +65,6 @@ public class SocketIOActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (! SocketIOClient.getInstance().isConnected()) return;
                 String message = mInputMessageView.getText().toString().trim();
                 if (TextUtils.isEmpty(message)) {
                     mInputMessageView.requestFocus();
@@ -77,7 +76,7 @@ public class SocketIOActivity extends AppCompatActivity {
             }
         });
 
-        mSocket = new MessageSocket();
+        mSocket = BizSocketManager.getInstance().getMessageSocket();
 
     }
 
