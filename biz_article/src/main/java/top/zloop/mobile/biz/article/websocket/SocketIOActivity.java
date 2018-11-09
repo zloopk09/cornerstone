@@ -31,6 +31,7 @@ public class SocketIOActivity extends AppCompatActivity {
 
     public static final String EVENT_ADD_USER = "add user";
     private String username="test-robot";
+    private MessageSocket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,19 +73,21 @@ public class SocketIOActivity extends AppCompatActivity {
                 }
                 mInputMessageView.setText("");
                 addMessage(username, message);
-                SocketIOClient.getInstance().sendMessage(message);
+                mSocket.sendMessage(message);
             }
         });
+
+        mSocket = new MessageSocket();
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        SocketIOClient.getInstance().registerConnectLisenner(new OnSocketIOConnectListener() {
+        mSocket.registerConnectLisenner(new OnSocketIOConnectListener() {
             @Override
             public void onConnect() {
-                SocketIOClient.getInstance().getSocket().emit(EVENT_ADD_USER, username);
+
             }
 
             @Override
@@ -111,26 +114,6 @@ public class SocketIOActivity extends AppCompatActivity {
                     }
                 });
             }
-        }).registerRoomLisenner(new OnSocketIORoomEventListener() {
-            @Override
-            public void onUserJoined(final Message message) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMessage(message.getTitle(),message.getContent());
-                    }
-                });
-            }
-
-            @Override
-            public void onUserLeft(final Message message) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addMessage(message.getTitle(),message.getContent());
-                    }
-                });
-            }
         }).connect();
 
     }
@@ -144,15 +127,13 @@ public class SocketIOActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        SocketIOClient.getInstance().unregisterConnectLisenner();
-        SocketIOClient.getInstance().unregisterMessageLisenner();
-        SocketIOClient.getInstance().unregisterRoomLisenner();
+        mSocket.off();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        SocketIOClient.getInstance().disconnect();
+        mSocket.disconnect();
     }
 
 }

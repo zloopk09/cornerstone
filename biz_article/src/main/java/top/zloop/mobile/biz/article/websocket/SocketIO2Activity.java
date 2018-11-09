@@ -32,10 +32,16 @@ public class SocketIO2Activity extends AppCompatActivity {
 
     private String username;
 
+    private MessageSocket mMessageSocket;
+    private RoomSocket mRoomSocket;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_socket_io2);
+
+        mMessageSocket = new MessageSocket();
+        mRoomSocket = new RoomSocket();
 
         Bundle bundle = this.getIntent().getExtras();
         username = bundle.getString("username");
@@ -57,7 +63,7 @@ public class SocketIO2Activity extends AppCompatActivity {
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SocketIOClient.getInstance().registerMessageLisenner(new OnSocketIOMessageEventListener() {
+                mMessageSocket.registerMessageLisenner(new OnSocketIOMessageEventListener() {
                     @Override
                     public void onNewMessage(final Message message) {
                         runOnUiThread(new Runnable() {
@@ -67,7 +73,8 @@ public class SocketIO2Activity extends AppCompatActivity {
                             }
                         });
                     }
-                }).registerRoomLisenner(new OnSocketIORoomEventListener() {
+                });
+                mRoomSocket.registerRoomLisenner(new OnSocketIORoomEventListener() {
                     @Override
                     public void onUserJoined(final Message message) {
                         runOnUiThread(new Runnable() {
@@ -111,7 +118,7 @@ public class SocketIO2Activity extends AppCompatActivity {
                 }
                 mInputMessageView.setText("");
                 addMessage(username, message);
-                SocketIOClient.getInstance().sendMessage(message);
+                mMessageSocket.sendMessage(message);
             }
         });
 
@@ -120,7 +127,7 @@ public class SocketIO2Activity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        SocketIOClient.getInstance().registerMessageLisenner(new OnSocketIOMessageEventListener() {
+        mMessageSocket.registerMessageLisenner(new OnSocketIOMessageEventListener() {
             @Override
             public void onNewMessage(final Message message) {
                 runOnUiThread(new Runnable() {
@@ -130,7 +137,8 @@ public class SocketIO2Activity extends AppCompatActivity {
                     }
                 });
             }
-        }).registerRoomLisenner(new OnSocketIORoomEventListener() {
+        });
+        mRoomSocket.registerRoomLisenner(new OnSocketIORoomEventListener() {
             @Override
             public void onUserJoined(final Message message) {
                 runOnUiThread(new Runnable() {
@@ -162,8 +170,8 @@ public class SocketIO2Activity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        SocketIOClient.getInstance().unregisterMessageLisenner();
-        SocketIOClient.getInstance().unregisterRoomLisenner();
+        mMessageSocket.off();
+        mRoomSocket.off();
     }
 
     @Override
