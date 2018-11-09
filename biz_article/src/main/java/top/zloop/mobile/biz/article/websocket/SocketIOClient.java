@@ -54,8 +54,7 @@ public class SocketIOClient {
     private OnSocketIOMessageEventListener mOnSocketIOMessageEventListener;
     private OnSocketIORoomEventListener mOnSocketIORoomEventListener;
 
-    private SocketIOClient() {
-    }
+    private SocketIOClient() {}
 
     public static SocketIOClient getInstance() {
         if (instance == null) {
