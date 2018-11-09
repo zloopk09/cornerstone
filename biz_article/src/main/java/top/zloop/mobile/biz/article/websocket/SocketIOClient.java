@@ -1,6 +1,5 @@
 package top.zloop.mobile.biz.article.websocket;
 
-import android.app.Application;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -19,7 +18,7 @@ import top.zloop.mobile.biz.article.websocket.data.Message;
 
 public class SocketIOClient {
 
-    private static final String TAG = "SocketIOClient";
+    private final String TAG = this.getClass().getSimpleName();
 
     private static SocketIOClient instance;
 
@@ -48,12 +47,12 @@ public class SocketIOClient {
 //                opts.reconnectionDelayMax = 1000; //重连等待时间
 //                opts.secure = true;
 //                opts.forceNew = true;
-                opts.hostnameVerifier = new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String hostname, SSLSession session) {
-                        return true;
-                    }
-                };
+//                opts.hostnameVerifier = new HostnameVerifier() {
+//                    @Override
+//                    public boolean verify(String hostname, SSLSession session) {
+//                        return true;
+//                    }
+//                };
 //                mSocket = IO.socket(SOCKET_URL);
                 mSocket = IO.socket(SOCKET_URL, opts);
 
