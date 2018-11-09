@@ -11,9 +11,6 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-
 import top.zloop.mobile.biz.article.websocket.data.Message;
 
 public class SocketIOClient {
