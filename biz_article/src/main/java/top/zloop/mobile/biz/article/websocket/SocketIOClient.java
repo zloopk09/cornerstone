@@ -15,9 +15,7 @@ import top.zloop.mobile.biz.article.websocket.data.Message;
 
 public class SocketIOClient {
 
-    private final String TAG = this.getClass().getSimpleName();
-
-    private static SocketIOClient instance;
+    private static final String TAG = "websocket";
 
     public static final String SOCKET_URL = "https://socket-io-chat.now.sh/";
 
@@ -25,20 +23,15 @@ public class SocketIOClient {
     public static final String EVENT_USER_JOINED = "user joined";
     public static final String EVENT_USER_LEFT = "user left";
 
-    private Socket mSocket;
-
-    private OnSocketIOConnectListener mOnSocketIOConnectListener;
-    private OnSocketIOMessageEventListener mOnSocketIOMessageEventListener;
-    private OnSocketIORoomEventListener mOnSocketIORoomEventListener;
-
-    private SocketIOClient() {
-        if(mSocket==null){
-            try {
-                IO.Options opts = new IO.Options();
+    private static SocketIOClient instance;
+    private static Socket mSocket;
+    static {
+        try {
+            IO.Options opts = new IO.Options();
 //                opts.path = "/notify";
 //                opts.query = "scanId=a3f453c91f4bb12ddfd963a277670c33";
-                opts.transports = new String[]{"websocket"};
-                opts.timeout = 10 * 1000;
+            opts.transports = new String[]{"websocket"};
+            opts.timeout = 10 * 1000;
 //                opts.reconnection = true;
 //                opts.reconnectionAttempts = 5;
 //                opts.reconnectionDelayMax = 1000; //重连等待时间
@@ -51,12 +44,17 @@ public class SocketIOClient {
 //                    }
 //                };
 //                mSocket = IO.socket(SOCKET_URL);
-                mSocket = IO.socket(SOCKET_URL, opts);
-
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
+            mSocket = IO.socket(SOCKET_URL, opts);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
+    }
+
+    private OnSocketIOConnectListener mOnSocketIOConnectListener;
+    private OnSocketIOMessageEventListener mOnSocketIOMessageEventListener;
+    private OnSocketIORoomEventListener mOnSocketIORoomEventListener;
+
+    private SocketIOClient() {
     }
 
     public static SocketIOClient getInstance() {
@@ -66,7 +64,7 @@ public class SocketIOClient {
         return instance;
     }
 
-    public Socket getSocket(){
+    public static Socket getSocket(){
         return mSocket;
     }
 
