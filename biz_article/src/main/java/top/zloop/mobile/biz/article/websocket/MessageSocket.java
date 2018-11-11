@@ -16,10 +16,6 @@ public class MessageSocket {
 
     public static final String EVENT_NEW_MESSAGE = "new message";
 
-    public static final String EVENT_ADD_USER = "add user";
-    private String username="test-robot";
-
-    private OnSocketIOConnectListener mOnSocketIOConnectListener;
     private OnSocketIOMessageEventListener mOnSocketIOMessageEventListener;
 
     private static Socket mSocket;
@@ -44,20 +40,7 @@ public class MessageSocket {
     }
 
     public void off() {
-        mSocket.off(Socket.EVENT_CONNECT,onConnect);
-        mSocket.off(Socket.EVENT_DISCONNECT,onDisconnect);
-        mSocket.off(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
-        mSocket.off(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
         mSocket.off(EVENT_NEW_MESSAGE,onNewMessage);
-    }
-
-    public MessageSocket registerConnectLisenner(OnSocketIOConnectListener listener){
-        mOnSocketIOConnectListener = listener;
-        mSocket.on(Socket.EVENT_CONNECT,onConnect);
-        mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
-        mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectTimeout);
-        mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onConnectError);
-        return this;
     }
 
     public MessageSocket registerMessageLisenner(OnSocketIOMessageEventListener listener){
@@ -65,42 +48,6 @@ public class MessageSocket {
         mSocket.on(EVENT_NEW_MESSAGE,onNewMessage);
         return this;
     }
-
-
-    private Emitter.Listener onConnect = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d(TAG, "connected");
-            Log.d(TAG, "mSocket.id()?:"+mSocket.id());
-            Log.d(TAG, "mSocket.connected()?:"+mSocket.connected());
-            mSocket.emit(EVENT_ADD_USER, username);
-            if (mOnSocketIOConnectListener != null) mOnSocketIOConnectListener.onConnect();
-        }
-    };
-
-    private Emitter.Listener onDisconnect = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.d(TAG, "diconnected");
-            if (mOnSocketIOConnectListener != null) mOnSocketIOConnectListener.onDisconnect();
-        }
-    };
-
-    private Emitter.Listener onConnectTimeout = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.e(TAG, "connecting timeout");
-            if (mOnSocketIOConnectListener != null) mOnSocketIOConnectListener.onConnectTimeout();
-        }
-    };
-
-    private Emitter.Listener onConnectError = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            Log.e(TAG, "connecting error");
-            if (mOnSocketIOConnectListener != null) mOnSocketIOConnectListener.onConnectError();
-        }
-    };
 
 
     public void sendMessage(final Object... args){

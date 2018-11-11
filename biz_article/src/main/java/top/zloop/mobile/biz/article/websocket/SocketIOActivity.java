@@ -76,14 +76,7 @@ public class SocketIOActivity extends AppCompatActivity {
             }
         });
 
-        mSocket = BizSocketManager.getInstance().getMessageSocket();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSocket.registerConnectLisenner(new OnSocketIOConnectListener() {
+        SocketIOClient.getInstance().connect(new OnSocketIOConnectListener() {
             @Override
             public void onConnect() {
 
@@ -103,7 +96,15 @@ public class SocketIOActivity extends AppCompatActivity {
             public void onConnectError() {
 
             }
-        }).registerMessageLisenner(new OnSocketIOMessageEventListener() {
+        });
+        mSocket = BizSocketManager.getInstance().getMessageSocket();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSocket.registerMessageLisenner(new OnSocketIOMessageEventListener() {
             @Override
             public void onNewMessage(final Message message) {
                 runOnUiThread(new Runnable() {
@@ -132,7 +133,7 @@ public class SocketIOActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mSocket.disconnect();
+        SocketIOClient.getInstance().disconnect();
     }
 
 }
