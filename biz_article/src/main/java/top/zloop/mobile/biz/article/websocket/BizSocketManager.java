@@ -2,7 +2,7 @@ package top.zloop.mobile.biz.article.websocket;
 
 public class BizSocketManager {
 
-    private static final String TAG = "websocket-BizSocketManager";
+    private final String TAG = this.getClass().getSimpleName();
 
     private static BizSocketManager instance;
 

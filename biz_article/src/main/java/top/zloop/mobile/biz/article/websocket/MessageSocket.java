@@ -12,7 +12,7 @@ import top.zloop.mobile.biz.article.websocket.data.Message;
 
 public class MessageSocket {
 
-    private static final String TAG = "websocket-MessageSocket";
+    private final String TAG = this.getClass().getSimpleName();
 
     public static final String EVENT_NEW_MESSAGE = "new message";
 

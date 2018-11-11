@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
 
 public class SocketIOClient {
 
-    private static final String TAG = "websocket";
+    private final String TAG = this.getClass().getSimpleName();
 
     public static final String SOCKET_URL = "https://socket-io-chat.now.sh/";
 
