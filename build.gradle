@@ -60,9 +60,26 @@ ext {
     targetSdkVersion = 28
     compileSdkVersion = 28
 
+//    applicationId='top.zloop.mobile.cornerstone'
+//    versionCode=101
+//    versionName='1.01'
+
     // official dependencies
     supportLibraryVersion = '28.0.0'
     constraintLayoutVersion = '1.1.3'
+
+    butterknifeVersion = '8.8.1'
+    tinkerVersion ='1.9.1'
+
+    retrofit2Version = "2.4.0"
+    okHttpVersion = "3.4.1"
+
+    frescoVersion = "0.12.0"
+
+    leakcanary = "1.3.1"
+    powerMockitoVersion = '1.6.5'
+    hamcrestVersion = '1.3'
+    rulesVersion = '0.5'
 
 //    retrofit
 //    okhttp3

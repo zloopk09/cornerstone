@@ -1,0 +1,105 @@
+
+ext.packageTime = {
+    new Date().format("yyyyMMdd", TimeZone.getDefault())
+}
+
+ext {
+    testDependencies = [
+            "junitVersion"          : "junit:junit:4.12",
+            "hamcrestVersion"       : "org.hamcrest:hamcrest-all:${hamcrestVersion}",
+            "hamcrestLibVersion"    : "org.hamcrest:hamcrest-library:${hamcrestVersion}",
+            "powerModuleVersion"    : "org.powermock:powermock-module-junit4:${powerMockitoVersion}",
+            "powerModuleRuleVersion": "org.powermock:powermock-module-junit4-rule:${powerMockitoVersion}",
+            "powerMockitoVersion"   : "org.powermock:powermock-api-mockito:${powerMockitoVersion}",
+            "runnerVersion"         : "com.android.support.test:runner:${rulesVersion}",
+            "runnerRulesVersion"    : "com.android.support.test:rules:${rulesVersion}",
+            "mockitoVersion"        : "org.mockito:mockito-core:2.4.0",
+            "espressoVersion"       : "com.android.support.test.espresso:espresso-core:2.2.2",
+    ]
+
+    thirpartyDependencies = [
+
+    ]
+
+    projectDependencies = [
+
+    ]
+}
+
+def commonConfigure = {
+    android {
+        compileSdkVersion rootProject.ext.android.compileSdkVersion
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        defaultConfig {
+            minSdkVersion rootProject.ext.android.minSdkVersion
+            targetSdkVersion rootProject.ext.android.targetSdkVersion
+            versionCode rootProject.ext.android.versionCode
+            versionName rootProject.ext.android.versionName
+            multiDexEnabled true
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments = [moduleName: project.getName()]
+                }
+            }
+        }
+        packagingOptions {
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'LICENSE.txt'
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/ASL2.0'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/services/javax.annotation.processing.Processor'
+        }
+        buildTypes {
+            release.with {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+            // 重置lint配置
+            lintConfig file("${project.rootDir}/lint.xml")
+            xmlOutput file("${lintReportsPath}/xml/" + project.getName() + "_lint.xml")
+            htmlOutput file("${lintReportsPath}/html/" + project.getName() + "_lint.html")
+        }
+    }
+}
+
+def appConfigure = {
+        android {
+            signingConfigs {
+                release {
+                    storeFile file(RELEASE_STORE_FILE)
+                    storePassword RELEASE_STORE_PASSWORD
+                    keyAlias RELEASE_KEY_ALIAS
+                    keyPassword RELEASE_KEY_PASSWORD
+                }
+            }
+            defaultConfig {
+                applicationId rootProject.ext.android.applicationId
+            }
+            dexOptions {
+                javaMaxHeapSize "12g"
+                preDexLibraries = false
+                jumboMode = true
+            }
+            packagingOptions {
+                pickFirst('lib/*/libRoadLineRebuildAPI.so')
+                pickFirst('lib/*/libGNaviUtils.so')
+                pickFirst('lib/*/libGNaviData.so')
+                pickFirst('lib/*/libGNaviMap.so')
+                pickFirst('lib/*/libGNaviMapex.so')
+                pickFirst('lib/*/libGNaviSearch.so')
+            }
+        }
+}
+
+//https://www.programcreek.com/java-api-examples/index.php?api=org.gradle.api.artifacts.dsl.DependencyHandler
