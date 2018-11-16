@@ -81,16 +81,8 @@ ext {
     hamcrestVersion = '1.3'
     rulesVersion = '0.5'
 
-//    retrofit
-//    okhttp3
-//    dagger2
-//    rxjava
-//    rxbinding
-//    glide
-//    picasso
     gsonVersion = '2.8.5'
     guavaVersion = '26.0-android'
-
 
     // test dependencies
     junitVersion = '4.12'
