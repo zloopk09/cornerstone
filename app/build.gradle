@@ -15,6 +15,10 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    // https://developer.android.com/studio/build/build-variants#product-flavorshttps://developer.android.com/studio/build/build-variants.html#product-flavors
+    // https://gist.github.com/gabrielemariotti/6856974
+    // another way to keep sign file safe
+    // https://stackoverflow.com/questions/18328730/how-to-create-a-release-signed-apk-file-using-gradle/21020469#21020469
     signingConfigs {
         release
     }
@@ -23,7 +27,8 @@ android {
 
         debug {
             versionNameSuffix "-debug"
-            debuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
@@ -33,8 +38,8 @@ android {
             minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
-            useProguard false
             signingConfig signingConfigs.release
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
