@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply from: '../signingHelper.gradle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -13,13 +14,16 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+
+    signingConfigs {
+        release
+    }
+
     buildTypes {
 
         debug {
             versionNameSuffix "-debug"
             debuggable true
-            minifyEnabled true
-            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
@@ -27,8 +31,10 @@ android {
         release {
             versionNameSuffix "-release"
             minifyEnabled true
+            shrinkResources true
             zipAlignEnabled true
-            useProguard true
+            useProguard false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
