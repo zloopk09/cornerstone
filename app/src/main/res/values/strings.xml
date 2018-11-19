@@ -5,4 +5,8 @@
     <string name="title_discover">Discover</string>
     <string name="title_message">Message</string>
     <string name="title_user">User</string>
+
+    <string name="error_message_network">Network error</string>
+    <string name="error_message_call">Call failed</string>
+    <string name="error_message_map">Map loading failed</string>
 </resources>
