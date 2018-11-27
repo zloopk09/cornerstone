@@ -66,6 +66,25 @@ android {
 //            buildConfigField 'boolean', 'PAID', 'true'
 //        }
 //    }
+
+//    applicationVariants.all { variant ->
+//        def flavor = variant.mergedFlavor
+//        def name = flavor.getVersionName()
+//        def versionName = name + '-' + variant.properties.get('flavorName')
+//        if (variant.buildType.isDebuggable()) {
+//            versionName += '-debug';
+//        }
+//        flavor.versionName = versionName;
+//    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            if (variant.buildType.isDebuggable()) {
+                output.versionNameOverride = "-debug"
+            }
+
+        }
+    }
 }
 
 dependencies {
