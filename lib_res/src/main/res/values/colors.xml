@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <!--<color name="button_foreground">#FFFFFF</color>-->
+    <!--<color name="button_background">#2A91BD</color>-->
+
+    <!-- grayscale -->
+    <color name="white">#FFFFFF</color>
+
+    <!-- basic colors -->
+    <color name="blue">#2A91BD</color>
+
+    <color name="button_foreground">@color/white</color>
+    <color name="button_background">@color/blue</color>
+</resources>
