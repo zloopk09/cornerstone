@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-<!-- google's material design colours from 
-http://www.google.com/design/spec/style/color.html#color-ui-color-palette -->
+    <!--https://gist.github.com/daniellevass/b0b8cfa773488e138037?utm_source=androiddevtools&utm_medium=website-->
+    <!-- google's material design colours from
+    http://www.google.com/design/spec/style/color.html#color-ui-color-palette -->
 
     <!--reds-->
     <color name="md_red_50">#FFEBEE</color>
@@ -297,5 +297,16 @@ http://www.google.com/design/spec/style/color.html#color-ui-color-palette -->
     <color name="md_blue_grey_700">#455A64</color>
     <color name="md_blue_grey_800">#37474F</color>
     <color name="md_blue_grey_900">#263238</color>
-    
+
+    <!--https://gist.github.com/jemshit/0e755f9a5669fe78d0e2-->
+    <!-- Dark Text Color for Light Background -->
+    <color name="textDarkPrimary">#DE000000</color> <!--DE for %87 opacity-->
+    <color name="textDarkSecondary">#8A000000</color> <!--8A for %54 opacity-->
+    <color name="textDarkDisabled">#61000000</color> <!--61 for %38 opacity-->
+
+    <!-- White Text Color for Dark Background -->
+    <color name="textLightPrimary">#FFFFFF</color> <!--%100 opacity-->
+    <color name="textLightSecondary">#B2FFFFFF</color> <!--B2 for %70 opacity-->
+    <color name="textLightDisabled">#80FFFFFF</color> <!--80 for %50 opacity-->
+
 </resources>
