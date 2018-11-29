@@ -1,7 +1,7 @@
 apply plugin: 'checkstyle'
 
 task cleanCheckStyleReport(type: Delete){
-    delete "$project.buildDir/reports/checkstyle/"
+    delete "$project.rootDir/reports"
     group = 'Code Quality'
 }
 
@@ -19,10 +19,10 @@ task checkstyle(type: Checkstyle) {
     classpath = files()
     reports {
         html {
-            destination new File("$project.buildDir/reports/checkstyle/html/" + project.getName() + "_checkstyle.html")
+            destination new File("$project.rootDir/reports/checkstyle/" + project.getName() + "_checkstyle.html")
         }
         xml {
-            destination new File("$project.buildDir/reports/checkstyle/html/" + project.getName() + "_checkstyle.xml")
+            destination new File("$project.rootDir/reports/checkstyle/" + project.getName() + "_checkstyle.xml")
         }
     }
     description 'Checkstyle inspection'
