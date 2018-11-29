@@ -1,21 +1,32 @@
 apply plugin: 'checkstyle'
 
-checkstyle {
-    toolVersion "8.10.1"
+//checkstyle {
+//    toolVersion "8.10.1"
+//}
+
+//checkstyle {
+//    toolVersion = '5.9'
+//}
+
+task cleanCheckStyleReport(type: Delete){
+    delete "$project.buildDir/reports/checkstyle/"
+    group = 'Code Quality'
 }
 
 task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/google_checks.xml")
     source 'src/main', 'src/release'
     include '**/*.java'
     exclude '**/gen/**'
     exclude '**/R.java'
     exclude '**/BuildConfig.java'
-    classpath = files()
 
     ignoreFailures = false
     showViolations = true
 
-    configFile file("${project.rootDir}/google_checks.xml")
+//    configFile rootProject.file('google_checks.xml')
+
+    classpath = files()
     reports {
         html {
             destination new File("$project.buildDir/reports/checkstyle/html/" + project.getName() + "_checkstyle.html")
