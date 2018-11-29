@@ -1,20 +1,12 @@
 apply plugin: 'checkstyle'
 
-//checkstyle {
-//    toolVersion "8.10.1"
-//}
-
-//checkstyle {
-//    toolVersion = '5.9'
-//}
-
 task cleanCheckStyleReport(type: Delete){
     delete "$project.buildDir/reports/checkstyle/"
     group = 'Code Quality'
 }
 
 task checkstyle(type: Checkstyle) {
-    configFile file("${project.rootDir}/google_checks.xml")
+    configFile file("${project.rootDir}/check_style.xml")
     source 'src/main', 'src/release'
     include '**/*.java'
     exclude '**/gen/**'
@@ -24,15 +16,13 @@ task checkstyle(type: Checkstyle) {
     ignoreFailures = false
     showViolations = true
 
-//    configFile rootProject.file('google_checks.xml')
-
     classpath = files()
     reports {
         html {
             destination new File("$project.buildDir/reports/checkstyle/html/" + project.getName() + "_checkstyle.html")
         }
         xml {
-            destination new File("$project.buildDir/reports/checkstyle/html/" + project.getName() + "_checkstyle.html")
+            destination new File("$project.buildDir/reports/checkstyle/html/" + project.getName() + "_checkstyle.xml")
         }
     }
     description 'Checkstyle inspection'
