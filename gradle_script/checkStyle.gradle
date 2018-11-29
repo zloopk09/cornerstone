@@ -6,7 +6,7 @@ task cleanCheckStyleReport(type: Delete){
 }
 
 task checkstyle(type: Checkstyle) {
-    configFile file("${project.rootDir}/check_style.xml")
+    configFile file("${project.rootDir}/gradle_script/check_style.xml")
     source 'src/main', 'src/release'
     include '**/*.java'
     exclude '**/gen/**'
