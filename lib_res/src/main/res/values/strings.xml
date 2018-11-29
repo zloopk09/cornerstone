@@ -1,3 +1,28 @@
 <resources>
 
+    <!--标题-->
+
+    <!--对话框-->
+    <string name="prompt">提示</string>
+    <string name="dialog_hint_know">我知道了</string>
+
+    <!--操作-->
+
+
+    <!--网络-->
+    <string name="net_exception">网络不通，请检查网络设置</string>
+    <string name="net_timeout_exception">网络连接超时，请检查网络设置</string>
+    <string name="server_exception">服务器繁忙，请稍后重试</string>
+
+    <string name="save">保存</string>
+    <string name="commint">提交</string>
+    <string name="add">添加</string>
+    <string name="category">分类</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="sort">排序</string>
+    <string name="confirm">确定</string>
+    <string name="sure">确定</string>
+
+
 </resources>
