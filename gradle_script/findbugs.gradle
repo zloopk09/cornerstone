@@ -1,0 +1,41 @@
+apply plugin: 'findbugs'
+
+task cleanFindbugsReport(type: Delete){
+    group = 'Code Quality'
+    delete "$project.rootDir/reports/findbugs"
+}
+
+task findBugs(type: FindBugs) {
+    description 'Checkstyle inspection'
+    group = 'Code Quality'
+    //忽略失败(失败了还能构建)
+    ignoreFailures = true
+    //分析工作等级 min/default/max
+    effort = "default"
+    //报告优先级别 low/medium/high
+    reportLevel = "medium"
+    //过滤器(排除 匹配不检测)
+    excludeFilter = new File("${project.rootDir}/gradle_script/findbugs_exclude_filter.xml")
+    //.class文件目录
+    classes = fileTree("${project.buildDir}/intermediates/classes")
+    //源码目录
+    source = fileTree('src/main/java')
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+    reports {
+        //只能开启一个
+        xml.enabled = false
+        html.enabled = true
+        //指定输出目录
+        html {
+            destination new File("$project.rootDir/reports/findbugs/" + project.getName() + "_findbugs.html")
+        }
+        xml {
+            destination new File("$project.rootDir/reports/findbugs/" + project.getName() + "_findbugs.xml")
+        }
+    }
+}

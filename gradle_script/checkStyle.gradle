@@ -1,11 +1,13 @@
 apply plugin: 'checkstyle'
 
 task cleanCheckStyleReport(type: Delete){
-    delete "$project.rootDir/reports"
     group = 'Code Quality'
+    delete "$project.rootDir/reports/checkstyle"
 }
 
 task checkstyle(type: Checkstyle) {
+    description 'Checkstyle inspection'
+    group = 'Code Quality'
     configFile file("${project.rootDir}/gradle_script/check_style.xml")
     source 'src/main', 'src/release'
     include '**/*.java'
@@ -25,6 +27,4 @@ task checkstyle(type: Checkstyle) {
             destination new File("$project.rootDir/reports/checkstyle/" + project.getName() + "_checkstyle.xml")
         }
     }
-    description 'Checkstyle inspection'
-    group = 'Code Quality'
 }
