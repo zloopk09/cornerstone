@@ -21,7 +21,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: getRepositoryUrl()) {
-                authentication(userName: NAME, password: PASSWORD) // maven授权信息
+                authentication(userName: NAME, password: PASSWORD)
             }
             pom.version = VERSION_NAME
             pom.artifactId = ARTIFACT_ID
