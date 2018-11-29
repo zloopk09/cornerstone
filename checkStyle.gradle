@@ -1,0 +1,29 @@
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion "8.10.1"
+}
+
+task checkstyle(type: Checkstyle) {
+    source 'src/main', 'src/release'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+    classpath = files()
+
+    ignoreFailures = false
+    showViolations = true
+
+    configFile file("${project.rootDir}/google_checks.xml")
+    reports {
+        html {
+            destination new File("$project.buildDir/reports/checkstyle/html/" + project.getName() + "_checkstyle.html")
+        }
+        xml {
+            destination new File("$project.buildDir/reports/checkstyle/html/" + project.getName() + "_checkstyle.html")
+        }
+    }
+    description 'Checkstyle inspection'
+    group = 'Code Quality'
+}
