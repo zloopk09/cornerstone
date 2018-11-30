@@ -65,10 +65,18 @@ def androidConfigure = {
 }
 
 def javaConfigure = {
+    apply plugin: 'java-library'
 
+    dependencies {
+        implementation fileTree(dir: 'libs', include: ['*.jar'])
+    }
+
+    sourceCompatibility = "8"
+    targetCompatibility = "8"
 }
 
 if (getName().contains("java")) {
+//    https://www.programcreek.com/java-api-examples/index.php?api=org.gradle.api.artifacts.dsl.DependencyHandler
     javaConfigure
 } else {
     androidConfigure()
