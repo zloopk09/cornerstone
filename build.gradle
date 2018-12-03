@@ -79,3 +79,5 @@ task clean(type: Delete) {
 //        }
 //    }
 //}
+
+task hello(type:HelloWorldTask)
