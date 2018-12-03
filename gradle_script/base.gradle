@@ -54,7 +54,7 @@ def androidConfigure = {
         }
 
         lintOptions {
-            abortOnError true
+            abortOnError false
             xmlReport false
             htmlReport true
             lintConfig file("${project.rootDir}/gradle_script/lint.xml")
