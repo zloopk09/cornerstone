@@ -134,7 +134,7 @@ android {
             if (variant.buildType.isDebuggable()) {
                 output.versionNameOverride = "-debug"
             }
-            if (variant.buildType.name == 'release'){
+            if (variant.buildType.name.contains('release') ){
                 variant.assemble.doLast {
                     deployApks
                 }
