@@ -16,6 +16,20 @@
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
+# Remove all debug logs
+# ref: https://www.guardsquare.com/en/products/proguard/manual/examples#logging
+#-assumenosideeffects class android.util.Log {
+#    public static *** d(...);
+#}
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
+
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
