@@ -21,6 +21,7 @@
 #-assumenosideeffects class android.util.Log {
 #    public static *** d(...);
 #}
+# 去掉log日志：
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
     public static int v(...);
@@ -28,6 +29,11 @@
     public static int w(...);
     public static int d(...);
     public static int e(...);
+}
+# 去掉System.out.println 和System.out.print输出
+-assumenosideeffects class java.io.PrintStream {
+    public *** println(...);
+    public *** print(...);
 }
 
 # If you keep the line number information, uncomment this to
