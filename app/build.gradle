@@ -92,8 +92,8 @@ android {
 //            project.archivesBaseName = APK_NAME+"-"+VERSION_NAME + "-"+buildDate;
             signingConfig signingConfigs.release
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguardTest-rules.pro'
         }
 
 //        pre {
