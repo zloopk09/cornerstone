@@ -80,6 +80,8 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix "-debug"
             minifyEnabled false
+            ext.enableCrashlytics = false
+//            resConfigs "zh", "xxhdpi"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }

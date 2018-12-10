@@ -20,7 +20,7 @@ import top.zloop.mobile.biz.article.websocket.data.Message;
 
 public class SocketIO2Activity extends AppCompatActivity {
 
-    private final String TAG = this.getClass().getSimpleName();
+    private final String TAG = SocketIO2Activity.class.getSimpleName();
 
     private ListView mMessagesView;
     private EditText mInputMessageView;

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Cornerstone</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Home</string>
@@ -9,4 +9,12 @@
     <string name="error_message_network">Network error</string>
     <string name="error_message_call">Call failed</string>
     <string name="error_message_map">Map loading failed</string>
+
+    <string name="tab_foo">Foo</string>
+    <string name="tab_baz">Baz</string>
+
+    <string-array name="tab_labels">
+        <item>@string/tab_foo</item>
+        <item>@string/tab_baz</item>
+    </string-array>
 </resources>

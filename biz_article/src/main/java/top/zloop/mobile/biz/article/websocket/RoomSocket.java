@@ -12,7 +12,7 @@ import top.zloop.mobile.biz.article.websocket.data.Message;
 
 public class RoomSocket {
 
-    private final String TAG = this.getClass().getSimpleName();
+    private final String TAG = RoomSocket.class.getSimpleName();
 
     public static final String EVENT_USER_JOINED = "user joined";
     public static final String EVENT_USER_LEFT = "user left";
