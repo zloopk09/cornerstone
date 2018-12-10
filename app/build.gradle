@@ -98,28 +98,32 @@ android {
             testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguardTest-rules.pro'
         }
 
-//        pre {
-//            initWith release
-//            debuggable true
-//            versionNameSuffix "-pre"
-//        }
+        pre {
+            initWith release
+            debuggable true
+            versionNameSuffix "-pre"
+            matchingFallbacks = ['release', 'debug']
+        }
     }
 
-//    flavorDimensions "default"
-//
-//    // If you need to add more flavors, consider using flavor dimensions.
-//    productFlavors {
-//        lite {
-//            dimension "default"
-//            applicationIdSuffix ".lite"
-//            buildConfigField 'boolean', 'PAID', 'false'
-//        }
-//        pro {
-//            dimension "default"
-//            applicationIdSuffix ".pro"
-//            buildConfigField 'boolean', 'PAID', 'true'
-//        }
-//    }
+    flavorDimensions "profit", "marketing"
+
+    // If you need to add more flavors, consider using flavor dimensions.
+    productFlavors {
+        lite {
+            dimension "profit"
+            applicationIdSuffix ".lite"
+            buildConfigField 'boolean', 'PAID', 'false'
+        }
+        pro {
+            dimension "profit"
+            applicationIdSuffix ".pro"
+            buildConfigField 'boolean', 'PAID', 'true'
+        }
+        mini{
+            dimension "marketing"
+        }
+    }
 
 //    applicationVariants.all { variant ->
 //        def flavor = variant.mergedFlavor
