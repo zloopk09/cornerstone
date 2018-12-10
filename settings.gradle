@@ -1,1 +1,9 @@
 include ':app', ':lib_base', ':lib_widget', ':lib_utils', ':biz_user', ':biz_search', ':biz_home', ':biz_message', ':biz_article', ':lib_java', ':lib_res'
+
+//设置根项目的名字
+//rootProject.name = 'Cornerstone'
+
+//迭代访问所有根目录下的子项目，设置自定义的构建脚本名称
+//rootProject.children.each {
+//    it.buildFileName = it.name + '.gradle'
+//}
