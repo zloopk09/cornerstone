@@ -14,7 +14,7 @@ def getVersionCode = { ->
         }
         return Integer.parseInt(code.toString().trim())
     } catch (exception) {
-        return "1";
+        return "1"
     }
 }
 
@@ -28,7 +28,7 @@ def getVersionName = { ->
         }
         return stdout.toString().trim()
     } catch (exception) {
-        return "0.0.0.1";
+        return "0.0.0.1"
     }
 }
 
@@ -74,6 +74,49 @@ android {
         release
     }
 //    def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+
+
+    flavorDimensions "profit", "marketing"
+
+    // If you need to add more flavors, consider using flavor dimensions.
+    productFlavors {
+        lite {
+            dimension "profit"
+            applicationIdSuffix ".lite"
+            buildConfigField 'boolean', 'PAID', 'false'
+            buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'true'
+        }
+        pro {
+            dimension "profit"
+            applicationIdSuffix ".pro"
+            buildConfigField 'boolean', 'PAID', 'true'
+            buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'false'
+        }
+        mini{
+            dimension "marketing"
+            versionCode 3
+            minSdkVersion 23
+        }
+        full{
+            dimension "marketing"
+        }
+        xiaomi{
+//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+            dimension "marketing"
+        }
+    }
+
+//    sourceSets {
+//        main {
+//            jniLibs.srcDir 'src/main/libs'
+//        }
+//        free {
+//            manifest.srcFile 'src/free/AndroidManifest.xml'
+//            java.srcDirs = ['src/free/java',]
+//            resources.srcDirs = ['src/free/resources', ]
+//        }
+//    }
+
     buildTypes {
 
         debug {
@@ -84,6 +127,7 @@ android {
             useProguard false
             shrinkResources true
             zipAlignEnabled true
+            buildConfigField "boolean", "IS_DEBUG", "true"
             ext.enableCrashlytics = false
 //            resConfigs "zh", "xxhdpi"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -95,6 +139,7 @@ android {
             minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
+            buildConfigField "boolean", "IS_DEBUG", "false"
 //            project.archivesBaseName = APK_NAME+"-"+VERSION_NAME + "-"+buildDate;
             signingConfig signingConfigs.release
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -102,30 +147,11 @@ android {
             testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguardTest-rules.pro'
         }
 
-        pre {
+        staging {
             initWith release
             debuggable true
             versionNameSuffix "-pre"
             matchingFallbacks = ['release', 'debug']
-        }
-    }
-
-    flavorDimensions "profit", "marketing"
-
-    // If you need to add more flavors, consider using flavor dimensions.
-    productFlavors {
-        lite {
-            dimension "profit"
-            applicationIdSuffix ".lite"
-            buildConfigField 'boolean', 'PAID', 'false'
-        }
-        pro {
-            dimension "profit"
-            applicationIdSuffix ".pro"
-            buildConfigField 'boolean', 'PAID', 'true'
-        }
-        mini{
-            dimension "marketing"
         }
     }
 
@@ -136,6 +162,9 @@ android {
 //        if (variant.buildType.isDebuggable()) {
 //            versionName += '-debug';
 //        }
+//    if (flavor.name.equals('xiaomi')){
+//        variant.setIgnore(true);
+//    }
 //        flavor.versionName = versionName;
 //    }
 
@@ -150,6 +179,23 @@ android {
                 }
             }
         }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/MANIFEST.MF'
+    }
+
+    lintOptions {
+        abortOnError false
+        xmlReport false
+        htmlReport true
+        lintConfig file("${project.rootDir}/gradle_script/lint.xml")
+        xmlOutput file("$project.rootDir/reports/lint/" + project.getName() + "_lint.xml")
+        htmlOutput file("$project.rootDir/reports/lint/" + project.getName() + "_lint.html")
     }
 
     // Always show the result of every unit test, even if it passes.
@@ -176,6 +222,7 @@ dependencies {
     implementation project(':biz_message')
     implementation project(':biz_search')
     implementation project(':biz_user')
+//    freeCompile 'com.google.firebase:firebase-ads:10.2.1'
 
     implementation "com.android.support.constraint:constraint-layout:$rootProject.constraintLayoutVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
