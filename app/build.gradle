@@ -122,14 +122,15 @@ android {
             dimension "feature"
             applicationIdSuffix ".lite"
 //            packageName = android.defaultConfig.packageName + ".paid"
-            buildConfigField 'boolean', 'PAID', 'false'
             buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'true'
         }
         pro {
             dimension "feature"
             applicationIdSuffix ".pro"
-            buildConfigField 'boolean', 'PAID', 'true'
             buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'false'
+        }
+        internal{
+            dimension "market"
         }
         mini{
             dimension "market"
@@ -172,10 +173,11 @@ android {
     // 移除渠道marketing下面的debug和staging包
     variantFilter { variant ->
         def names = variant.flavors*.name
-        // To check for a build type instead, use variant.buildType.name == "buildType"
-        if (variant.buildType.name != "release" && names.contains("xiaomi")) {
-            // Gradle ignores any variants that satisfy the conditions above.
-            setIgnore(true)
+        def buildTypeName = variant.buildType.name
+        if(!names.contains("internal")){
+            if(!buildTypeName.equals("release")){
+                setIgnore(true)
+            }
         }
     }
 
