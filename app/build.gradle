@@ -79,7 +79,11 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix "-debug"
-            minifyEnabled false
+            //启用Android插件的压缩 但是不做代码混淆 ref:https://developer.android.com/studio/build/shrink-code?hl=zh-cn
+            minifyEnabled true
+            useProguard false
+            shrinkResources true
+            zipAlignEnabled true
             ext.enableCrashlytics = false
 //            resConfigs "zh", "xxhdpi"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
