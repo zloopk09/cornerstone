@@ -124,12 +124,12 @@ android {
     // If you need to add more flavors, consider using flavor dimensions.
     // 配置内容打包时会覆盖 覆盖关系依次是：buildType{}优先于Flavor{}优先于defaultConfig{}
     productFlavors {
-        lite {
+        free {
             dimension "feature"
-            applicationIdSuffix ".lite"
+            applicationIdSuffix ".free"
 //            packageName = android.defaultConfig.packageName + ".paid"
             buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'true'
-//            manifestPlaceholders = [label: "lite", icon: "@drawable/icon_debug"]
+//            manifestPlaceholders = [label: "free", icon: "@drawable/icon_debug"]
         }
         pro {
             dimension "feature"
@@ -162,12 +162,12 @@ android {
             assets.srcDirs = ['src/main/assets']
             jniLibs.srcDir 'src/main/libs'
         }
-        lite {
-            manifest.srcFile 'src/lite/AndroidManifest.xml'
-            java.srcDirs = ['src/lite/java']
-            res.srcDirs = ['src/lite/res']
-            assets.srcDirs = ['src/lite/assets']
-            jniLibs.srcDir 'src/lite/libs'
+        free {
+            manifest.srcFile 'src/free/AndroidManifest.xml'
+            java.srcDirs = ['src/free/java']
+            res.srcDirs = ['src/free/res']
+            assets.srcDirs = ['src/free/assets']
+            jniLibs.srcDir 'src/free/libs'
         }
         pro {
             manifest.srcFile 'src/pro/AndroidManifest.xml'
