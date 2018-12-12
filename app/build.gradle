@@ -106,7 +106,12 @@ android {
             testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguardTest-rules.pro'
         }
 
-        staging {
+//        quick {
+//            initWith debug
+//            resConfigs("en", "xxhdpi")
+//        }
+
+        pre {
             initWith release
             debuggable true
             versionNameSuffix "-pre"
@@ -114,20 +119,23 @@ android {
         }
     }
 
-    flavorDimensions "feature", "market"
+    flavorDimensions "feature", "market" //, "country"
 
     // If you need to add more flavors, consider using flavor dimensions.
+    // 配置内容打包时会覆盖 覆盖关系依次是：buildType{}优先于Flavor{}优先于defaultConfig{}
     productFlavors {
         lite {
             dimension "feature"
             applicationIdSuffix ".lite"
 //            packageName = android.defaultConfig.packageName + ".paid"
             buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'true'
+//            manifestPlaceholders = [label: "lite", icon: "@drawable/icon_debug"]
         }
         pro {
             dimension "feature"
             applicationIdSuffix ".pro"
             buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'false'
+//            manifestPlaceholders = [label: "@string/app_name", icon: "@drawable/ic_launcher"]
         }
         internal{
             dimension "market"
@@ -181,6 +189,9 @@ android {
         }
     }
 
+    //application下是applicationVariants
+    //library下是libraryVariants
+    //同时共有testVariants
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             if (variant.buildType.isDebuggable()) {
