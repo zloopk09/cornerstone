@@ -46,6 +46,7 @@ def getGitHash = { ->
     }
     return stdout.toString().trim()
 }
+//    def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -72,56 +73,14 @@ android {
     // https://stackoverflow.com/questions/18328730/how-to-create-a-release-signed-apk-file-using-gradle/21020469#21020469
     signingConfigs {
         release
+//        debug
     }
-//    def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-
-
-    flavorDimensions "profit", "marketing"
-
-    // If you need to add more flavors, consider using flavor dimensions.
-    productFlavors {
-        lite {
-            dimension "profit"
-            applicationIdSuffix ".lite"
-            buildConfigField 'boolean', 'PAID', 'false'
-            buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'true'
-        }
-        pro {
-            dimension "profit"
-            applicationIdSuffix ".pro"
-            buildConfigField 'boolean', 'PAID', 'true'
-            buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'false'
-        }
-        mini{
-            dimension "marketing"
-            versionCode 3
-            minSdkVersion 23
-        }
-        full{
-            dimension "marketing"
-        }
-        xiaomi{
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
-            dimension "marketing"
-        }
-    }
-
-//    sourceSets {
-//        main {
-//            jniLibs.srcDir 'src/main/libs'
-//        }
-//        free {
-//            manifest.srcFile 'src/free/AndroidManifest.xml'
-//            java.srcDirs = ['src/free/java',]
-//            resources.srcDirs = ['src/free/resources', ]
-//        }
-//    }
 
     buildTypes {
 
         debug {
             applicationIdSuffix '.debug'
-            versionNameSuffix "-debug"
+            versionNameSuffix "-DEBUG"
             //启用Android插件的压缩 但是不做代码混淆 ref:https://developer.android.com/studio/build/shrink-code?hl=zh-cn
             minifyEnabled true
             useProguard false
@@ -155,18 +114,70 @@ android {
         }
     }
 
-//    applicationVariants.all { variant ->
-//        def flavor = variant.mergedFlavor
-//        def name = flavor.getVersionName()
-//        def versionName = name + '-' + variant.properties.get('flavorName')
-//        if (variant.buildType.isDebuggable()) {
-//            versionName += '-debug';
-//        }
-//    if (flavor.name.equals('xiaomi')){
-//        variant.setIgnore(true);
-//    }
-//        flavor.versionName = versionName;
-//    }
+    flavorDimensions "feature", "market"
+
+    // If you need to add more flavors, consider using flavor dimensions.
+    productFlavors {
+        lite {
+            dimension "feature"
+            applicationIdSuffix ".lite"
+//            packageName = android.defaultConfig.packageName + ".paid"
+            buildConfigField 'boolean', 'PAID', 'false'
+            buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'true'
+        }
+        pro {
+            dimension "feature"
+            applicationIdSuffix ".pro"
+            buildConfigField 'boolean', 'PAID', 'true'
+            buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'false'
+        }
+        mini{
+            dimension "market"
+            versionCode 3
+            minSdkVersion 23
+        }
+        full{
+            dimension "market"
+        }
+        xiaomi{
+//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+            dimension "market"
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+            java.srcDirs = ['src/main/java']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
+            jniLibs.srcDir 'src/main/libs'
+        }
+        lite {
+            manifest.srcFile 'src/lite/AndroidManifest.xml'
+            java.srcDirs = ['src/lite/java']
+            res.srcDirs = ['src/lite/res']
+            assets.srcDirs = ['src/lite/assets']
+            jniLibs.srcDir 'src/lite/libs'
+        }
+        pro {
+            manifest.srcFile 'src/pro/AndroidManifest.xml'
+            java.srcDirs = ['src/pro/java']
+            res.srcDirs = ['src/pro/res']
+            assets.srcDirs = ['src/pro/assets']
+            jniLibs.srcDir 'src/pro/libs'
+        }
+    }
+
+    // 移除渠道marketing下面的debug和staging包
+    variantFilter { variant ->
+        def names = variant.flavors*.name
+        // To check for a build type instead, use variant.buildType.name == "buildType"
+        if (variant.buildType.name != "release" && names.contains("xiaomi")) {
+            // Gradle ignores any variants that satisfy the conditions above.
+            setIgnore(true)
+        }
+    }
 
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -208,6 +219,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    compile fileTree(dir: 'src/main/libs', include: '*.jar')
+//    freeCompile fileTree(dir: 'src/free/libs', include: '*.jar')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
