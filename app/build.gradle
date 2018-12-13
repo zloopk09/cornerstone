@@ -31,11 +31,6 @@ def getVersionName = { ->
     }
 }
 
-// Get the date of build
-def getDateOfBuild = { -> // ISO 8601 time format
-    return new Date().format("yyyy-MM-dd'T'HH:mm'Z'").toString().trim()
-}
-
 // Get the last Git Short Hash
 def getGitHash = { ->
     def stdout = new ByteArrayOutputStream()
@@ -47,6 +42,11 @@ def getGitHash = { ->
 }
 //    def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
+// Get the date of build
+def getDateOfBuild = { -> // ISO 8601 time format
+    return new Date().format("yyyy-MM-dd'T'HH:mm'Z'").toString().trim()
+}
+
 // ref: http://google.github.io/android-gradle-dsl/current/
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -54,8 +54,8 @@ android {
         applicationId "top.zloop.mobile.cornerstone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode getVersionCode()
-        versionName getVersionName()
+        versionCode getVersionCode() // Google Play 允许的最大 versionCode 值为 2100000000
+        versionName getVersionName() // <major>.<minor>.<point>
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -78,6 +78,8 @@ android {
             shrinkResources true
             zipAlignEnabled true
             buildConfigField "boolean", "IS_DEBUG", "true"
+            buildConfigField("String", "BUILD_TIME", "\"0000\"")
+            //resValue("string", "build_time", "0")
             ext.enableCrashlytics = false
 //            resConfigs "zh", "xxhdpi"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -89,6 +91,7 @@ android {
             shrinkResources true
             zipAlignEnabled true
             buildConfigField "boolean", "IS_DEBUG", "false"
+            buildConfigField("String", "BUILD_TIME", "\"${getDateOfBuild}\"")
 //            project.archivesBaseName = APK_NAME+"-"+VERSION_NAME + "-"+buildDate;
             signingConfig signingConfigs.release
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -118,6 +121,7 @@ android {
 //            packageName = android.defaultConfig.packageName + ".paid"
             buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'true'
 //            manifestPlaceholders = [label: "free", icon: "@drawable/icon_debug"]
+//            missingDimensionStrategy 'pro', 'mini'
         }
         pro {
             dimension "feature"
@@ -145,6 +149,7 @@ android {
     }
 
     sourceSets {
+        // src/freeDebug/ > src/debug/ > src/free/ > src/main/
         main {
             manifest.srcFile 'src/main/AndroidManifest.xml'
             java.srcDirs = ['src/main/java']
@@ -214,13 +219,13 @@ android {
         // The maximum number of concurrent processes that can be used to dex. Defaults to 4.
         maxProcessCount 8
         // Number of threads to use when running dx. Defaults to 4.
-        threadCount 8
+        // threadCount 8
         // Specifies the -Xmx value when calling dx. Example value is "2048m".
         javaMaxHeapSize "4g"
         // Whether to pre-dex libraries. This can improve incremental builds, but clean builds may be slower.
         preDexLibraries true
         // https://developers.soundcloud.com/blog/congratulations-you-have-a-lot-of-code-remedying-androids-method-limit-part-1
-        jumboMode = true
+        // jumboMode = true
     }
 
     packagingOptions {
