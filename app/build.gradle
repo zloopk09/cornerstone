@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply from: '../signingHelper.gradle'
 
-
 // Version code is calculated as the number of commits from last commit on master
 def getVersionCode = { ->
     try {
@@ -57,6 +56,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode getVersionCode()
         versionName getVersionName()
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "DATE_OF_BUILD", "\"${getDateOfBuild()}\""
@@ -68,22 +68,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    // https://developer.android.com/studio/build/build-variants#product-flavorshttps://developer.android.com/studio/build/build-variants.html#product-flavors
-    // https://gist.github.com/gabrielemariotti/6856974
-    // another way to keep sign file safe
-    // https://stackoverflow.com/questions/18328730/how-to-create-a-release-signed-apk-file-using-gradle/21020469#21020469
-    signingConfigs {
-        release
-//        debugtest {
-//            storeFile file('../debug.jks')
-//            storePassword '123456'
-//            keyAlias 'cornerstone'
-//            keyPassword '123456'
-//        }
-    }
-
     buildTypes {
-
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix "-DEBUG"
@@ -98,7 +83,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
-
         release {
             versionNameSuffix "-release"
             minifyEnabled true
@@ -111,21 +95,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguardTest-rules.pro'
         }
-
-//        quick {
-//            initWith debug
-//            resConfigs("en", "xxhdpi")
-//        }
-
         pre {
             initWith release
             debuggable true
             versionNameSuffix "-pre"
             matchingFallbacks = ['release', 'debug']
         }
+//        quick {
+//            initWith debug
+//            resConfigs("en", "xxhdpi")
+//        }
     }
 
-    flavorDimensions "feature", "market" //, "country"
+    flavorDimensions "feature", "market" //, "country", "brand", "environment"
 
     // If you need to add more flavors, consider using flavor dimensions.
     // 配置内容打包时会覆盖 覆盖关系依次是：buildType{}优先于Flavor{}优先于defaultConfig{}
@@ -142,19 +124,21 @@ android {
             applicationIdSuffix ".pro"
             buildConfigField 'boolean', 'ADS_FEATURE_ENABLED', 'false'
 //            manifestPlaceholders = [label: "@string/app_name", icon: "@drawable/ic_launcher"]
+            proguardFile 'pro-feature-rules.pro'
         }
-        internal{
+        internal {
             dimension "market"
         }
-        mini{
+        mini {
             dimension "market"
-            versionCode 3
+            versionCode 30000 + android.defaultConfig.versionCode
+            versionNameSuffix "-mini"
             minSdkVersion 23
         }
-        full{
+        full {
             dimension "market"
         }
-        xiaomi{
+        xiaomi {
 //            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
             dimension "market"
         }
@@ -188,8 +172,8 @@ android {
     variantFilter { variant ->
         def flavorNames = variant.flavors*.name
         def buildTypeName = variant.buildType.name
-        if(!flavorNames.contains("internal")){
-            if(!buildTypeName.equals("release")){
+        if (!flavorNames.contains("internal")) {
+            if (!buildTypeName.equals("release")) {
                 setIgnore(true)
             }
         }
@@ -203,12 +187,40 @@ android {
             if (variant.buildType.isDebuggable()) {
                 output.versionNameOverride = "-debug"
             }
-            if (variant.buildType.name.contains('release') ){
+            if (variant.buildType.name.contains('release')) {
                 variant.assemble.doLast {
                     deployApks
                 }
             }
         }
+    }
+
+//    splits {
+//        // Configures multiple APKs based on ABI.
+//        abi {
+//            // Enables building multiple APKs.
+//            enable true
+//            // By default all ABIs are included, so use reset() and include to specify that we only
+//            // want APKs for x86, armeabi-v7a, and mips.
+//            reset()
+//            // Specifies a list of ABIs that Gradle should create APKs for.
+//            include "x86", "armeabi-v7a", "mips"
+//            // Specify that we want to also generate a universal APK that includes all ABIs.
+//            universalApk true
+//        }
+//    }
+
+    dexOptions {
+        // The maximum number of concurrent processes that can be used to dex. Defaults to 4.
+        maxProcessCount 8
+        // Number of threads to use when running dx. Defaults to 4.
+        threadCount 8
+        // Specifies the -Xmx value when calling dx. Example value is "2048m".
+        javaMaxHeapSize "4g"
+        // Whether to pre-dex libraries. This can improve incremental builds, but clean builds may be slower.
+        preDexLibraries true
+        // https://developers.soundcloud.com/blog/congratulations-you-have-a-lot-of-code-remedying-androids-method-limit-part-1
+        jumboMode = true
     }
 
     packagingOptions {
@@ -221,6 +233,7 @@ android {
 
     lintOptions {
         abortOnError false
+        // ignoreWarnings true
         xmlReport false
         htmlReport true
         lintConfig file("${project.rootDir}/gradle_script/lint.xml")
@@ -266,23 +279,23 @@ dependencies {
 
 }
 
-task deployApks(type:Copy) {
+task deployApks(type: Copy) {
     description = "Copies APKs and Proguard mappings to the deploy directory"
     def appName = "<app_name>";
-    def versionDir = android.defaultConfig.versionName+"_"+android.defaultConfig.versionCode;
+    def versionDir = android.defaultConfig.versionName + "_" + android.defaultConfig.versionCode;
 
     println("Copies APK and Proguard to " + versionDir)
 
     from 'build/outputs/mapping/release/'
     include '**/mapping.txt'
     into '../.admin/deploy/' + versionDir
-    rename ('mapping.txt', "${versionDir}-mapping.txt")
+    rename('mapping.txt', "${versionDir}-mapping.txt")
 
-    from ('.') {
+    from('.') {
         exclude '**/build', '**/src'
     }
 
     include '*.apk'
     into '../.admin/deploy/' + versionDir
-    rename ('app-release.apk', "${appName}-${versionDir}.apk")
+    rename('app-release.apk', "${appName}-${versionDir}.apk")
 }

@@ -1,23 +1,27 @@
-android{
-    signingConfigs{
-        def Properties props = new Properties()
-        def propFile = new File('signing.properties')
-        if (propFile.canRead()){
-            props.load(new FileInputStream(propFile))
+// Creates a variable called keystorePropertiesFile, and initializes it to the
+// keystore.properties file.
+def keystorePropertiesFile = rootProject.file("signing.properties")
 
-            if (props!=null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
-                    props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
-                release.storeFile = file(props['STORE_FILE'])
-                release.storePassword = props['STORE_PASSWORD']
-                release.keyAlias = props['KEY_ALIAS']
-                release.keyPassword = props['KEY_PASSWORD']
-            } else {
-                println 'signing.properties found but some entries are missing'
-                android.buildTypes.release.signingConfig = null
-            }
-        }else {
-            println 'signing.properties not found'
-            android.buildTypes.release.signingConfig = null
+// Initializes a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+
+// Loads the keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+// Loads signingConfigs
+android{
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
+//        debug {
+//            storeFile file('../debug.jks')
+//            storePassword '123456'
+//            keyAlias 'cornerstone'
+//            keyPassword '123456'
+//        }
     }
 }
