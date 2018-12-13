@@ -74,7 +74,12 @@ android {
     // https://stackoverflow.com/questions/18328730/how-to-create-a-release-signed-apk-file-using-gradle/21020469#21020469
     signingConfigs {
         release
-//        debug
+//        debugtest {
+//            storeFile file('../debug.jks')
+//            storePassword '123456'
+//            keyAlias 'cornerstone'
+//            keyPassword '123456'
+//        }
     }
 
     buildTypes {
