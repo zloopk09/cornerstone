@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply from: '../signingHelper.gradle'
-apply from: '../gradle_script/releaseHelper.gradle'
-apply from: '../gradle_script/autoVersioning.gradle'
+apply from: '../gradleScript/releaseHelper.gradle'
+apply from: '../gradleScript/autoVersioning.gradle'
 
 // Get the date of build
 def getDateOfBuild = { -> // ISO 8601 time format
@@ -205,7 +205,7 @@ android {
         // ignoreWarnings true
         xmlReport false
         htmlReport true
-        lintConfig file("${project.rootDir}/healthcheck/lint.xml")
+        lintConfig file("${project.rootDir}/healthCheck/lint.xml")
         xmlOutput file("$project.rootDir/reports/lint/" + project.getName() + "_lint.xml")
         htmlOutput file("$project.rootDir/reports/lint/" + project.getName() + "_lint.html")
     }

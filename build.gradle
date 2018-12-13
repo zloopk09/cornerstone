@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 // ~GradleVersionsPlugin
 apply plugin: "com.github.ben-manes.versions"
-apply from: "$rootProject.projectDir/gradle_script/dependencies.gradle"
+apply from: "$rootProject.projectDir/gradleScript/dependencies.gradle"
 
 buildscript {
     ext.kotlin_version = '1.2.61'
@@ -51,9 +51,9 @@ allprojects {
 }
 
 subprojects {
-//    apply from: "$rootProject.projectDir/healthcheck/checkStyle.gradle"
-//    apply from: "$rootProject.projectDir/healthcheck/findbugs.gradle"
-//    apply from: "$rootProject.projectDir/gradle_script/base.gradle"
+//    apply from: "$rootProject.projectDir/healthCheck/checkStyle.gradle"
+//    apply from: "$rootProject.projectDir/healthCheck/findbugs.gradle"
+//    apply from: "$rootProject.projectDir/gradleScript/base.gradle"
 
 }
 
