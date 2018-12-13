@@ -2,45 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply from: '../signingHelper.gradle'
-
-// Version code is calculated as the number of commits from last commit on master
-def getVersionCode = { ->
-    try {
-        def code = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', 'HEAD', '--count'
-            standardOutput = code
-        }
-        return Integer.parseInt(code.toString().trim())
-    } catch (exception) {
-        return "1"
-    }
-}
-
-// Version name is Last Tag Name + No. of commits form last Tag +  short git sha
-def getVersionName = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'describe', '--tags', '--dirty'
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    } catch (exception) {
-        return "0.0.0.1"
-    }
-}
-
-// Get the last Git Short Hash
-def getGitHash = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
-//    def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+apply from: '../gradle_script/releaseHelper.gradle'
+apply from: '../gradle_script/autoVersioning.gradle'
 
 // Get the date of build
 def getDateOfBuild = { -> // ISO 8601 time format
@@ -54,13 +17,13 @@ android {
         applicationId "top.zloop.mobile.cornerstone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode getVersionCode() // Google Play 允许的最大 versionCode 值为 2100000000
-        versionName getVersionName() // <major>.<minor>.<point>
+        versionCode 1 // Google Play 允许的最大 versionCode 值为 2100000000
+        versionName "0.0.1" // <major>.<minor>.<point>
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         buildConfigField "String", "DATE_OF_BUILD", "\"${getDateOfBuild()}\""
-        buildConfigField "String", "GIT_SHA", "\"${getGitHash()}\""
+        // buildConfigField "String", "GIT_SHA", "\"${getGitHash()}\""
     }
 
     compileOptions {
@@ -110,7 +73,7 @@ android {
 //        }
     }
 
-    flavorDimensions "feature", "market" //, "country", "brand", "environment"
+    flavorDimensions "feature", "market" //, "api", "country", "brand", "environment"
 
     // If you need to add more flavors, consider using flavor dimensions.
     // 配置内容打包时会覆盖 覆盖关系依次是：buildType{}优先于Flavor{}优先于defaultConfig{}
@@ -224,8 +187,9 @@ android {
         javaMaxHeapSize "4g"
         // Whether to pre-dex libraries. This can improve incremental builds, but clean builds may be slower.
         preDexLibraries true
+        // https://stackoverflow.com/questions/32067223/what-is-the-purpose-of-jumbomode-in-dexoptions-for-a-gradle-build/43616582
         // https://developers.soundcloud.com/blog/congratulations-you-have-a-lot-of-code-remedying-androids-method-limit-part-1
-        // jumboMode = true
+        jumboMode = true
     }
 
     packagingOptions {
@@ -267,6 +231,7 @@ dependencies {
     implementation "com.android.support:design:$rootProject.supportLibraryVersion"
     implementation "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
 
+    implementation 'com.android.support:multidex:1.0.3'
     implementation project(':biz_home')
     implementation project(':biz_article')
     implementation project(':biz_message')
@@ -282,25 +247,4 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:$rootProject.runnerVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
 
-}
-
-task deployApks(type: Copy) {
-    description = "Copies APKs and Proguard mappings to the deploy directory"
-    def appName = "<app_name>";
-    def versionDir = android.defaultConfig.versionName + "_" + android.defaultConfig.versionCode;
-
-    println("Copies APK and Proguard to " + versionDir)
-
-    from 'build/outputs/mapping/release/'
-    include '**/mapping.txt'
-    into '../.admin/deploy/' + versionDir
-    rename('mapping.txt', "${versionDir}-mapping.txt")
-
-    from('.') {
-        exclude '**/build', '**/src'
-    }
-
-    include '*.apk'
-    into '../.admin/deploy/' + versionDir
-    rename('app-release.apk', "${appName}-${versionDir}.apk")
 }

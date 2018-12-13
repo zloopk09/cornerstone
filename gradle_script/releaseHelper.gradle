@@ -1,0 +1,21 @@
+
+task deployApks(type: Copy) {
+    description = "Copies APKs and Proguard mappings to the deploy directory"
+    def appName = "<app_name>";
+    def versionDir = android.defaultConfig.versionName + "_" + android.defaultConfig.versionCode;
+
+    println("Copies APK and Proguard to " + versionDir)
+
+    from 'build/outputs/mapping/release/'
+    include '**/mapping.txt'
+    into '../.admin/deploy/' + versionDir
+    rename('mapping.txt', "${versionDir}-mapping.txt")
+
+    from('.') {
+        exclude '**/build', '**/src'
+    }
+
+    include '*.apk'
+    into '../.admin/deploy/' + versionDir
+    rename('app-release.apk', "${appName}-${versionDir}.apk")
+}

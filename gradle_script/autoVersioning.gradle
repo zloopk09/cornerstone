@@ -1,0 +1,38 @@
+// Version code is calculated as the number of commits from last commit on master
+def getVersionCode = { ->
+    try {
+        def code = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', 'HEAD', '--count'
+            standardOutput = code
+        }
+        return Integer.parseInt(code.toString().trim())
+    } catch (exception) {
+        return "1"
+    }
+}
+
+// Version name is Last Tag Name + No. of commits form last Tag +  short git sha
+def getVersionName = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--dirty'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    } catch (exception) {
+        return "0.0.0.1"
+    }
+}
+
+// Get the last Git Short Hash
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+//    def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
