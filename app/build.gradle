@@ -17,6 +17,7 @@ android {
         applicationId "top.zloop.mobile.cornerstone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        // 改为动态在buildType和flavor里面重新设置
         versionCode 1 // Google Play 允许的最大 versionCode 值为 2100000000
         versionName "0.0.1" // <major>.<minor>.<point>
         multiDexEnabled true
