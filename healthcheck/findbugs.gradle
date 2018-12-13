@@ -15,7 +15,7 @@ task findBugs(type: FindBugs) {
     //报告优先级别 low/medium/high
     reportLevel = "medium"
     //过滤器(排除 匹配不检测)
-    excludeFilter = new File("${project.rootDir}/gradle_script/findbugs_exclude_filter.xml")
+    excludeFilter = new File("${project.rootDir}/healthcheck/findbugs_exclude_filter.xml")
     //.class文件目录
     classes = fileTree("${project.buildDir}/intermediates/classes")
     //源码目录

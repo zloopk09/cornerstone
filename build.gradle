@@ -51,8 +51,8 @@ allprojects {
 }
 
 subprojects {
-//    apply from: "$rootProject.projectDir/gradle_script/checkStyle.gradle"
-//    apply from: "$rootProject.projectDir/gradle_script/findbugs.gradle"
+//    apply from: "$rootProject.projectDir/healthcheck/checkStyle.gradle"
+//    apply from: "$rootProject.projectDir/healthcheck/findbugs.gradle"
 //    apply from: "$rootProject.projectDir/gradle_script/base.gradle"
 
 }

@@ -8,7 +8,7 @@ task cleanCheckStyleReport(type: Delete){
 task checkstyle(type: Checkstyle) {
     description 'Checkstyle inspection'
     group = 'Code Quality'
-    configFile file("${project.rootDir}/gradle_script/check_style.xml")
+    configFile file("${project.rootDir}/healthcheck/check_style.xml")
     source 'src/main', 'src/release'
     include '**/*.java'
     exclude '**/gen/**'
