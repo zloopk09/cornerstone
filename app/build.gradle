@@ -48,6 +48,7 @@ def getGitHash = { ->
 }
 //    def GIT_SHA = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
+// ref: http://google.github.io/android-gradle-dsl/current/
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
