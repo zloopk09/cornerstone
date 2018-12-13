@@ -1,6 +1,8 @@
-apply plugin: 'groovy'
-
-dependencies {
-    compile gradleApi()
-    compile localGroovy()
-}
+//optionally, the buildSrc directory can host a build script if additional configuration is needed (e.g. to apply plugins or to declare dependencies).
+//ref: https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#sec:build_sources
+//apply plugin: 'groovy'
+//
+//dependencies {
+//    compile gradleApi()
+//    compile localGroovy()
+//}

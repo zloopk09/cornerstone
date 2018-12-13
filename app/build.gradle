@@ -9,7 +9,7 @@ apply from: '../gradleScript/autoVersioning.gradle'
 def getDateOfBuild = { -> // ISO 8601 time format
     return new Date().format("yyyy-MM-dd'T'HH:mm'Z'").toString().trim()
 }
-
+task myBuildTime(type : top.zloop.gradle.tasks.BuildTimeTask)
 // ref: http://google.github.io/android-gradle-dsl/current/
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -19,11 +19,11 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         // 改为动态在buildType和flavor里面重新设置
         versionCode 1 // Google Play 允许的最大 versionCode 值为 2100000000
-        versionName "0.0.1" // <major>.<minor>.<point>
+        versionName "0.0.1" // <major>.<minor>.<point>(-<label>)
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        buildConfigField "String", "DATE_OF_BUILD", "\"${getDateOfBuild()}\""
+        buildConfigField "String", "DATE_OF_BUILD", "\"${myBuildTime}\""
         // buildConfigField "String", "GIT_SHA", "\"${getGitHash()}\""
     }
 
@@ -154,7 +154,7 @@ android {
     variantFilter { variant ->
         def flavorNames = variant.flavors*.name
         def buildTypeName = variant.buildType.name
-        if (!flavorNames.contains("internal")) {
+        if (!flavorNames.contains("dev")) {
             if (!buildTypeName.equals("release")) {
                 setIgnore(true)
             }
