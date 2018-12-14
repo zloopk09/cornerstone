@@ -289,3 +289,8 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
 
 }
+
+//configurations.all {
+//    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//    resolutionStrategy.force "com.squareup.okhttp3:okhttp:3.6.0"
+//}
