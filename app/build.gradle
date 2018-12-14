@@ -63,14 +63,6 @@ android {
 //            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             testProguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguardTest-rules.pro'
-            applicationVariants.all { variant ->
-//            freeMarketDebug-版本号-版本名称-编译时间.apk
-                if (variant.buildType.name.contains('release')) {
-//                variant.mergedFlavor.versionCode = getVersionCode
-//                variant.mergedFlavor.versionName = getVersionName + "-" + variant.flavorName
-//                output.outputFileName = applicationName+"_${variant.flavorName}" + "_${variant.buildType.name}"+"_${variant.versionName}"
-                }
-            }
         }
         pre {
             initWith release
@@ -171,17 +163,28 @@ android {
     //application下是applicationVariants
     //library下是libraryVariants
     //同时共有testVariants
-    //也可以在buildType里面再执行 就不需要判断是哪种buildtypp了
-    //外层的做全局通用上的处理 比如variant.assemble.doLast
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
+//            freeMarketDebug-版本号-版本名称-编译时间.apk
+//            if (variant.buildType.name.contains('release')) {
+//                variant.mergedFlavor.versionCode = getVersionCode
+//                variant.mergedFlavor.versionName = getVersionName + "-" + variant.flavorName
+                output.outputFileName ="${rootProject.name}_${variant.flavorName}_${variant.buildType.name}.apk"
+//            }
+
             variant.assemble.doFirst {
                 println "### assemble.doFirst"
             }
 
             variant.assemble.doLast {
                 println "### assemble.doLast"
-                deployApks
+//                deployApks
+//                exec {
+//                    ignoreExitValue true
+//                    def fileName = "FireMaster_${variant.buildType.name}_${android.defaultConfig.versionCode}.apk"
+//                    commandLine "sh", "chmod +x ./script/uploadApk.sh"
+//                    commandLine "sh", "./script/uploadApk.sh", fileName, variant.buildType.name, VERSION_NAME
+//                }
             }
 
             variant.javaCompile.doLast {
