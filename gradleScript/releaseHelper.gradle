@@ -20,3 +20,13 @@ task deployApks(type: Copy) {
     into '../.admin/deploy/' + versionDir
     rename('app-release.apk', "${appName}-${versionDir}.apk")
 }
+
+task zipRelease(type: Zip) {
+    from 'src/dist'
+    into('libs')
+}
+
+deployApks.dependsOn zipRelease
+deployApks.onlyIf {
+    !System.env.contains('BUILD_NUMBER') // 如果是jenkins编译 可获取jenkins系统环境变量 来命名apk
+}
