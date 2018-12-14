@@ -1,6 +1,6 @@
 // Creates a variable called keystorePropertiesFile, and initializes it to the
 // keystore.properties file.
-def keystorePropertiesFile = rootProject.file("signing.properties")
+def keystorePropertiesFile = rootProject.file("./signing.properties")
 
 // Initializes a new Properties() object called keystoreProperties.
 def keystoreProperties = new Properties()
