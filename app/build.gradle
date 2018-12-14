@@ -5,11 +5,6 @@ apply from: '../signingHelper.gradle'
 apply from: '../gradleScript/releaseHelper.gradle'
 apply from: '../gradleScript/autoVersioning.gradle'
 
-// Get the date of build
-def getDateOfBuild = { -> // ISO 8601 time format
-    return new Date().format("yyyy-MM-dd'T'HH:mm'Z'").toString().trim()
-}
-task myBuildTime(type : top.zloop.gradle.tasks.BuildTimeTask)
 // ref: http://google.github.io/android-gradle-dsl/current/
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -23,7 +18,6 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        buildConfigField "String", "DATE_OF_BUILD", "\"${myBuildTime}\""
         // buildConfigField "String", "GIT_SHA", "\"${getGitHash()}\""
     }
 
@@ -56,7 +50,7 @@ android {
             shrinkResources true
             zipAlignEnabled true
             buildConfigField "boolean", "IS_DEBUG", "false"
-            buildConfigField("String", "BUILD_TIME", "\"${getDateOfBuild}\"")
+            buildConfigField "String", "DATE_OF_BUILD", "\"${getDateOfBuild}\""
             ext.enableCrashlytics = true
             ext.alwaysUpdateBuildId = true
 //            project.archivesBaseName = APK_NAME+"-"+VERSION_NAME + "-"+buildDate;

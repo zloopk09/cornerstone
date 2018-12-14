@@ -1,3 +1,4 @@
+task getDateOfBuild(type : top.zloop.gradle.tasks.BuildTimeTask)
 
 task deployApks(type: Copy) {
     description = "Copies APKs and Proguard mappings to the deploy directory"

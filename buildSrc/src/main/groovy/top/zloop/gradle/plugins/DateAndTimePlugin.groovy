@@ -1,4 +1,4 @@
-package top.zloop.gradle.tasks
+package top.zloop.gradle.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
