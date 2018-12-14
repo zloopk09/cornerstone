@@ -1,13 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-// ~GradleVersionsPlugin
-apply plugin: "com.github.ben-manes.versions"
 apply from: "$rootProject.projectDir/gradleScript/dependencies.gradle"
 
 buildscript {
     ext.kotlin_version = '1.2.61'
     ext.gradle_version = '3.2.1'
-    // ~GradleVersionsPlugin
-    ext.gradle_versions_plugin = '0.20.0'
 
     repositories {
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
@@ -20,12 +16,6 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        // ~GradleVersionsPlugin
-        // see https://github.com/ben-manes/gradle-versions-plugin
-        // usage: gradle dependencyUpdates -Drevision=release
-        classpath "com.github.ben-manes:gradle-versions-plugin:$gradle_versions_plugin"
-
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
