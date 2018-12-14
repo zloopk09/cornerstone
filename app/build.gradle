@@ -200,11 +200,12 @@ android {
     dexOptions {
         // The maximum number of concurrent processes that can be used to dex.
         // default is 4 and Total Memory = maxProcessCount * javaMaxHeapSize
-        maxProcessCount 2
+        //maxProcessCount 2
         // Number of threads to use when running dx. Defaults to 4.
         // threadCount 8
         // Specifies the -Xmx value when calling dx. Example value is "2048m".
-        javaMaxHeapSize "4g"
+        // ref: https://www.youtube.com/watch?v=7ll-rkLCtyk&feature=youtu.be&t=18m50s
+        //javaMaxHeapSize "4g"
         // Whether to pre-dex libraries. This can improve incremental builds, but clean builds may be slower.
         preDexLibraries true
         // https://stackoverflow.com/questions/32067223/what-is-the-purpose-of-jumbomode-in-dexoptions-for-a-gradle-build/43616582
