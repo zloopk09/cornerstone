@@ -1,8 +1,28 @@
 //optionally, the buildSrc directory can host a build script if additional configuration is needed (e.g. to apply plugins or to declare dependencies).
 //ref: https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#sec:build_sources
-//apply plugin: 'groovy'
+//apply plugin: 'groovy' //groovy语法引入
+//apply plugin: 'java-gradle-plugin' //JAVA语法引入
+//apply plugin: 'maven'
+//
+//
+//repositories {
+//    jcenter()
+//}
 //
 //dependencies {
+//    // 使用Gradle中的API需要这个
 //    compile gradleApi()
-//    compile localGroovy()
+//}
+//
+//
+//version = '1.0.1'
+//group = 'top.zloop.gradle.plugin'
+//archivesBaseName = 'DateAndTime'
+//
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: "file:../lib")
+//        }
+//    }
 //}
