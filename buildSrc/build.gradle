@@ -10,8 +10,9 @@
 //}
 //
 //dependencies {
-//    // 使用Gradle中的API需要这个
+//    compile localGroovy()
 //    compile gradleApi()
+//    testCompile gradleTestKit()
 //}
 //
 //

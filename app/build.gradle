@@ -40,7 +40,6 @@ android {
             useProguard false
             shrinkResources true
             zipAlignEnabled true
-            buildConfigField "boolean", "IS_DEBUG", "true"
             buildConfigField("String", "BUILD_TIME", "\"0000\"")
             //resValue("string", "build_time", "0")
             ext.enableCrashlytics = false
@@ -50,11 +49,10 @@ android {
             testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
         release {
-            versionNameSuffix "-release"
+            //versionNameSuffix "-RELEASE"
             minifyEnabled true
             shrinkResources true
             zipAlignEnabled true
-            buildConfigField "boolean", "IS_DEBUG", "false"
             buildConfigField "String", "DATE_OF_BUILD", "\"${getDateOfBuild}\""
             ext.enableCrashlytics = true
             ext.alwaysUpdateBuildId = true
@@ -67,7 +65,8 @@ android {
         pre {
             initWith release
             debuggable true
-            versionNameSuffix "-pre"
+            versionNameSuffix "-PRE"
+            applicationIdSuffix '.pre'
             matchingFallbacks = ['release', 'debug']
         }
 //        quick {
@@ -103,7 +102,7 @@ android {
             // the build automatically avoids legacy multidex when deploying to a device running
             // API level 21 or higher—regardless of what you set as your minSdkVersion.
             minSdkVersion 21
-            versionNameSuffix "-dev"
+            //versionNameSuffix "-dev"
             applicationIdSuffix '.dev'
             // The following configuration limits the "dev" flavor to using
             // English stringresources and xxhdpi screen-density resources.
@@ -112,7 +111,7 @@ android {
         mini {
             dimension "market"
             versionCode 30000 + android.defaultConfig.versionCode
-            versionNameSuffix "-mini"
+            //versionNameSuffix "-mini"
             minSdkVersion 23
         }
         full {
