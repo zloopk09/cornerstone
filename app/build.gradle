@@ -24,6 +24,13 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         // buildConfigField "String", "GIT_SHA", "\"${getGitHash()}\""
+        // if using CommandLineArgumentProvider
+        // then REF: https://developer.android.com/studio/build/dependencies#annotation_processor
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
     }
 
     compileOptions {
@@ -168,11 +175,19 @@ android {
 //            if (variant.buildType.name.contains('release')) {
 //                variant.mergedFlavor.versionCode = getVersionCode
 //                variant.mergedFlavor.versionName = getVersionName + "-" + variant.flavorName
-                output.outputFileName ="${rootProject.name}_${variant.flavorName}_${variant.buildType.name}.apk"
+            output.outputFileName = "${rootProject.name}_${variant.flavorName}_${variant.buildType.name}.apk"
 //            }
 
-            variant.assemble.doFirst {
-                println "### assemble.doFirst"
+            output.processManifest.doLast {
+//                // Stores the path to the maifest.
+//                String manifestPath = "$manifestOutputDirectory/AndroidManifest.xml"
+//                // Stores the contents of the manifest.
+//                def manifestContent = file(manifestPath).getText()
+//                // Changes the version code in the stored text.
+//                manifestContent = manifestContent.replace('android:versionCode="1"',
+//                        String.format('android:versionCode="%s"', generatedCode))
+//                // Overwrites the manifest with the new text.
+//                file(manifestPath).write(manifestContent)
             }
 
             variant.assemble.doLast {
@@ -199,7 +214,6 @@ android {
             }
         }
     }
-
 
 //    splits {
 //        // Configures multiple APKs based on ABI.
@@ -256,6 +270,17 @@ android {
             events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         }
     }
+}
+
+//if you want to add a dependency for a variant that combines a product flavor and a build type,
+// then you must initialize the configuration name in the configurations block.
+// ref: https://developer.android.com/studio/build/build-variants#dependencies
+// ref: https://developer.android.com/studio/build/dependencies#dependency_configurations
+configurations {
+    // Initializes a placeholder for the freeDebugRuntimeOnly dependency
+    // configuration.
+    freeDebugRuntimeOnly {}
+    freeDebugImplementation {}
 }
 
 dependencies {
