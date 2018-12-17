@@ -1,17 +1,11 @@
-// Creates a variable called keystorePropertiesFile, and initializes it to the
-// keystore.properties file.
-def keystorePropertiesFile = rootProject.file("./signing.properties")
-
-// Initializes a new Properties() object called keystoreProperties.
-def keystoreProperties = new Properties()
-
-// Loads the keystore.properties file into the keystoreProperties object.
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
 // Loads signingConfigs
 android{
     signingConfigs {
         release {
+            def keystorePropertiesFile = rootProject.file("./signing.properties")
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
             keyAlias keystoreProperties['keyAlias']
