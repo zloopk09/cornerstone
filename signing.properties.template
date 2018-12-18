@@ -1,0 +1,4 @@
+storeFile=../zloop.jks
+storePassword=xxxxxxx
+keyAlias=xxxxxxx
+keyPassword=xxxxx
