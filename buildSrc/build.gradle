@@ -28,3 +28,10 @@
 //        }
 //    }
 //}
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'com.android.tools.build:gradle:3.2.1'
+}
