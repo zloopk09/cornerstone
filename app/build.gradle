@@ -10,6 +10,10 @@ def versionPropertiesFile = rootProject.file("./versioning.properties")
 def versionProperties = new Properties()
 versionProperties.load(new FileInputStream(versionPropertiesFile))
 
+ext {
+    isFromCI = System.getenv("isFromCI") == "true"
+}
+
 // ref: http://google.github.io/android-gradle-dsl/current/
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -240,7 +244,7 @@ android {
         // ref: https://www.youtube.com/watch?v=7ll-rkLCtyk&feature=youtu.be&t=18m50s
         //javaMaxHeapSize "4g"
         // Whether to pre-dex libraries. This can improve incremental builds, but clean builds may be slower.
-        preDexLibraries true
+        preDexLibraries isFromCI
         // https://stackoverflow.com/questions/32067223/what-is-the-purpose-of-jumbomode-in-dexoptions-for-a-gradle-build/43616582
         // https://developers.soundcloud.com/blog/congratulations-you-have-a-lot-of-code-remedying-androids-method-limit-part-1
         jumboMode = true
