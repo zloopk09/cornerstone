@@ -8,6 +8,9 @@ ext {
     versionCode=101
     versionName='1.01'
 
+    sourceCompatVer = JavaVersion.VERSION_1_8
+    targetCompatVer = JavaVersion.VERSION_1_8
+
     // official dependencies
     supportLibraryVersion = '28.0.0'
     constraintLayoutVersion = '1.1.3'
